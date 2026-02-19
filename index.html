@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Busca Ativa JG</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #0b1220;
+        color: #e2e8f0;
+      }
+
+      header {
+        background: #0f172a;
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-bottom: 1px solid #1e293b;
+      }
+
+      header img {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        cursor: pointer;
+        border: 2px solid #1e293b;
+      }
+
+      header h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      header p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.8;
+      }
+
+      .container {
+        padding: 16px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 18px;
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 760px) {
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      label {
+        font-size: 12px;
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        background: #0b1220;
+        color: #e2e8f0;
+        outline: none;
+      }
+
+      textarea {
+        min-height: 70px;
+        resize: vertical;
+      }
+
+      button {
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 14px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .btn-primary {
+        background: #22c55e;
+        color: #052e16;
+      }
+
+      .btn-danger {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      .btn-secondary {
+        background: #334155;
+        color: #fff;
+      }
+
+      .quick {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .student {
+        display: grid;
+        gap: 10px;
+      }
+
+      .student strong {
+        font-size: 16px;
+      }
+
+      .badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid #334155;
+        background: #0b1220;
+      }
+
+      .muted {
+        opacity: 0.75;
+        font-size: 13px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .split {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <!-- CLICAR NO ÍCONE: TENTA INSTALAR O APP -->
+      <img
+        id="appIcon"
+        src="./icon-192.png"
+        alt="Busca Ativa JG"
+        title="Clique para instalar o app"
+      />
+
+      <div>
+        <h1>Busca Ativa JG</h1>
+        <p>Cadastro, filtros e busca rápida (PWA instalável)</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="card">
+        <div class="split">
+          <h2 style="margin: 0">Cadastrar estudante</h2>
+          <button class="btn-secondary" onclick="limparFormulario()">
+            Limpar
+          </button>
+        </div>
+
+        <div class="row" style="margin-top: 12px">
+          <div>
+            <label>NOME</label>
+            <input id="nome" placeholder="Ex: João da Silva" />
+          </div>
+
+          <div>
+            <label>RA</label>
+            <input id="ra" placeholder="Ex: 123456789" />
+          </div>
+
+          <div>
+            <label>TURMA</label>
+            <input id="turma" placeholder="Ex: 1A, 2B, 3C" />
+          </div>
+
+          <div>
+            <label>SÉRIE</label>
+            <select id="serie">
+              <option value="">Selecione</option>
+              <option>6º ANO</option>
+              <option>7º ANO</option>
+              <option>8º ANO</option>
+              <option>9º ANO</option>
+              <option>1ª SÉRIE EM</option>
+              <option>2ª SÉRIE EM</option>
+              <option>3ª SÉRIE EM</option>
+            </select>
+          </div>
+
+          <div>
+            <label>TELEFONE (WHATSAPP)</label>
+            <input id="telefone" placeholder="Ex: 11999999999" />
+          </div>
+
+          <div>
+            <label>RESPONSÁVEL</label>
+            <input id="responsavel" placeholder="Ex: Mãe / Pai / Avó" />
+          </div>
+
+          <div>
+            <label>RISCO</label>
+            <select id="risco">
+              <option value="">Selecione</option>
+              <option>CRÍTICO</option>
+              <option>ALTO</option>
+              <option>MÉDIO</option>
+              <option>BAIXO</option>
+            </select>
+          </div>
+
+          <div>
+            <label>STATUS</label>
+            <select id="status">
+              <option value="">Selecione</option>
+              <option>EM ACOMPANHAMENTO</option>
+              <option>FALTAS RECORRENTES</option>
+              <option>EVASÃO</option>
+              <option>RETORNOU</option>
+              <option>REGULARIZADO</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 12px">
+          <label>ENDEREÇO</label>
+          <input id="endereco" placeholder="Rua, nº, bairro, cidade" />
+        </div>
+
+        <div style="margin-top: 12px">
+          <label>OBSERVAÇÕES</label>
+          <textarea id="obs" placeholder="Relato, contato, visita, etc."></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" onclick="salvarEstudante()">
+            Salvar estudante
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="split">
+          <h2 style="margin: 0">Buscar / Filtrar</h2>
+          <button class="btn-secondary" onclick="resetFiltros()">
+            Resetar filtros
+          </button>
+        </div>
+
+        <div class="row" style="margin-top: 12px">
+          <div>
+            <label>BUSCA (nome, RA, turma, telefone)</label>
+            <input id="busca" placeholder="Digite para buscar..." oninput="render()" />
+          </div>
+
+          <div>
+            <label>FILTRAR POR STATUS</label>
+            <select id="fStatus" onchange="render()">
+              <option value="">Todos</option>
+              <option>EM ACOMPANHAMENTO</option>
+              <option>FALTAS RECORRENTES</option>
+              <option>EVASÃO</option>
+              <option>RETORNOU</option>
+              <option>REGULARIZADO</option>
+            </select>
+          </div>
+
+          <div>
+            <label>FILTRAR POR RISCO</label>
+            <select id="fRisco" onchange="render()">
+              <option value="">Todos</option>
+              <option>CRÍTICO</option>
+              <option>ALTO</option>
+              <option>MÉDIO</option>
+              <option>BAIXO</option>
+            </select>
+          </div>
+
+          <div>
+            <label>FILTRAR POR SÉRIE</label>
+            <select id="fSerie" onchange="render()">
+              <option value="">Todas</option>
+              <option>6º ANO</option>
+              <option>7º ANO</option>
+              <option>8º ANO</option>
+              <option>9º ANO</option>
+              <option>1ª SÉRIE EM</option>
+              <option>2ª SÉRIE EM</option>
+              <option>3ª SÉRIE EM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="quick">
+          <button class="btn-secondary" onclick="setQuick('CRÍTICO')">Crítico</button>
+          <button class="btn-secondary" onclick="setQuick('ALTO')">Alto</button>
+          <button class="btn-secondary" onclick="setQuick('EVASÃO')">Evasão</button>
+          <button class="btn-secondary" onclick="setQuick('RETORNOU')">Retornou</button>
+          <button class="btn-secondary" onclick="setQuick('FALTAS RECORRENTES')">
+            Atrasados/Faltas
+          </button>
+        </div>
+
+        <p class="muted" id="contador" style="margin-top: 10px"></p>
+      </div>
+
+      <div id="lista"></div>
+    </div>
+
+    <script>
+      // -----------------------------
+      // BANCO LOCAL (LOCALSTORAGE)
+      // -----------------------------
+      const KEY = "BUSCA_ATIVA_JG_DB";
+
+      function loadDB() {
+        try {
+          return JSON.parse(localStorage.getItem(KEY)) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveDB(db) {
+        localStorage.setItem(KEY, JSON.stringify(db));
+      }
+
+      let db = loadDB();
+
+      // -----------------------------
+      // FORM
+      // -----------------------------
+      function limparFormulario() {
+        ["nome", "ra", "turma", "serie", "telefone", "responsavel", "risco", "status", "endereco", "obs"].forEach(
+          (id) => (document.getElementById(id).value = "")
+        );
+      }
+
+      function salvarEstudante() {
+        const nome = document.getElementById("nome").value.trim();
+        const ra = document.getElementById("ra").value.trim();
+        const turma = document.getElementById("turma").value.trim();
+        const serie = document.getElementById("serie").value.trim();
+        const telefone = document.getElementById("telefone").value.trim();
+        const responsavel = document.getElementById("responsavel").value.trim();
+        const risco = document.getElementById("risco").value.trim();
+        const status = document.getElementById("status").value.trim();
+        const endereco = document.getElementById("endereco").value.trim();
+        const obs = document.getElementById("obs").value.trim();
+
+        if (!nome) {
+          alert("Preencha o NOME do estudante.");
+          return;
+        }
+
+        const estudante = {
+          id: crypto.randomUUID(),
+          nome,
+          ra,
+          turma,
+          serie,
+          telefone,
+          responsavel,
+          risco,
+          status,
+          endereco,
+          obs,
+          criadoEm: new Date().toISOString()
+        };
+
+        db.unshift(estudante);
+        saveDB(db);
+        limparFormulario();
+        render();
+        alert("Estudante salvo com sucesso!");
+      }
+
+      // -----------------------------
+      // FILTROS
+      // -----------------------------
+      function setQuick(valor) {
+        const fStatus = document.getElementById("fStatus");
+        const fRisco = document.getElementById("fRisco");
+
+        // Se bater em risco
+        if (["CRÍTICO", "ALTO", "MÉDIO", "BAIXO"].includes(valor)) {
+          fRisco.value = valor;
+          fStatus.value = "";
+        } else {
+          fStatus.value = valor;
+          fRisco.value = "";
+        }
+        render();
+      }
+
+      function resetFiltros() {
+        document.getElementById("busca").value = "";
+        document.getElementById("fStatus").value = "";
+        document.getElementById("fRisco").value = "";
+        document.getElementById("fSerie").value = "";
+        render();
+      }
+
+      // -----------------------------
+      // AÇÕES
+      // -----------------------------
+      function abrirWhats(telefone) {
+        const clean = (telefone || "").replace(/\D/g, "");
+        if (!clean) return alert("Sem telefone cadastrado.");
+        window.open("https://wa.me/55" + clean, "_blank");
+      }
+
+      function abrirMaps(endereco) {
+        if (!endereco) return alert("Sem endereço cadastrado.");
+        window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(endereco), "_blank");
+      }
+
+      function remover(id) {
+        if (!confirm("Deseja remover este estudante?")) return;
+        db = db.filter((x) => x.id !== id);
+        saveDB(db);
+        render();
+      }
+
+      // -----------------------------
+      // RENDER
+      // -----------------------------
+      function render() {
+        const lista = document.getElementById("lista");
+        const termo = document.getElementById("busca").value.trim().toLowerCase();
+        const fStatus = document.getElementById("fStatus").value.trim();
+        const fRisco = document.getElementById("fRisco").value.trim();
+        const fSerie = document.getElementById("fSerie").value.trim();
+
+        let itens = [...db];
+
+        if (termo) {
+          itens = itens.filter((e) => {
+            const blob = `${e.nome} ${e.ra} ${e.turma} ${e.serie} ${e.telefone} ${e.responsavel} ${e.endereco} ${e.obs}`.toLowerCase();
+            return blob.includes(termo);
+          });
+        }
+
+        if (fStatus) itens = itens.filter((e) => e.status === fStatus);
+        if (fRisco) itens = itens.filter((e) => e.risco === fRisco);
+        if (fSerie) itens = itens.filter((e) => e.serie === fSerie);
+
+        document.getElementById("contador").innerText =
+          `Resultados: ${itens.length} | Total no banco: ${db.length}`;
+
+        if (itens.length === 0) {
+          lista.innerHTML = `<div class="card"><p class="muted">Nenhum estudante encontrado.</p></div>`;
+          return;
+        }
+
+        lista.innerHTML = itens
+          .map((e) => {
+            return `
+              <div class="card student">
+                <div class="split">
+                  <strong>${escapeHtml(e.nome)}</strong>
+                  <span class="muted">${new Date(e.criadoEm).toLocaleDateString()}</span>
+                </div>
+
+                <div class="badges">
+                  ${e.status ? `<span class="badge">STATUS: ${escapeHtml(e.status)}</span>` : ""}
+                  ${e.risco ? `<span class="badge">RISCO: ${escapeHtml(e.risco)}</span>` : ""}
+                  ${e.serie ? `<span class="badge">SÉRIE: ${escapeHtml(e.serie)}</span>` : ""}
+                  ${e.turma ? `<span class="badge">TURMA: ${escapeHtml(e.turma)}</span>` : ""}
+                  ${e.ra ? `<span class="badge">RA: ${escapeHtml(e.ra)}</span>` : ""}
+                </div>
+
+                ${e.telefone ? `<div class="muted"><b>Telefone:</b> ${escapeHtml(e.telefone)}</div>` : ""}
+                ${e.responsavel ? `<div class="muted"><b>Responsável:</b> ${escapeHtml(e.responsavel)}</div>` : ""}
+                ${e.endereco ? `<div class="muted"><b>Endereço:</b> ${escapeHtml(e.endereco)}</div>` : ""}
+                ${e.obs ? `<div class="muted"><b>Obs:</b> ${escapeHtml(e.obs)}</div>` : ""}
+
+                <div class="actions">
+                  <button class="btn-secondary" onclick="abrirWhats('${escapeJs(e.telefone)}')">WhatsApp</button>
+                  <button class="btn-secondary" onclick="abrirMaps('${escapeJs(e.endereco)}')">Maps</button>
+                  <button class="btn-danger" onclick="remover('${e.id}')">Remover</button>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function escapeHtml(str) {
+        return (str || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function escapeJs(str) {
+        return (str || "").replaceAll("'", "\\'");
+      }
+
+      render();
+
+      // -----------------------------
+      // PWA INSTALL (clicar no ícone)
+      // -----------------------------
+      let deferredPrompt = null;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      document.getElementById("appIcon").addEventListener("click", async () => {
+        if (!deferredPrompt) {
+          alert(
+            "Instalação ainda não disponível. Publique no GitHub Pages e abra pelo Chrome/Edge para instalar."
+          );
+          return;
+        }
+
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      });
+
+      // -----------------------------
+      // SERVICE WORKER
+      // -----------------------------
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js");
+        });
+      }
+    </script>
+  </body>
+</html>
