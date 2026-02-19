@@ -1,10 +1,11 @@
 {
-  "name": "Busca Ativa - JG",
-  "short_name": "BuscaAtivaJG",
-  "start_url": "./",
+  "name": "Busca Ativa JG",
+  "short_name": "Busca Ativa",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b2b4b",
+  "background_color": "#f5f5f5",
+  "theme_color": "#1976d2",
+  "description": "Aplicativo de controle de presença e contato com turmas da escola João Guidotti",
   "icons": [
     {
       "src": "ICON-192.PNG",
