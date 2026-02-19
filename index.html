@@ -1,973 +1,563 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Busca Ativa JG</title>
+  <title>Busca Ativa - JG</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#0b1220">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b2b4b" />
 
   <style>
     :root{
-      --bg:#070b14;
-      --card:#0b1220;
-      --card2:#0e1930;
-      --border:rgba(255,255,255,.08);
-      --text:#eaf1ff;
-      --muted:rgba(234,241,255,.72);
-      --accent:#4f8cff;
-      --ok:#2bd576;
-      --bad:#ff4d6d;
-      --warn:#ffcc00;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius:18px;
+      --bg:#0b1020;
+      --card:#121a2e;
+      --card2:#0f172a;
+      --txt:#e8eefc;
+      --muted:#9fb1d6;
+      --line:#243052;
+      --btn:#1f6feb;
+      --danger:#ef4444;
+      --ok:#22c55e;
+      --warn:#f59e0b;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(900px 600px at 20% 10%, rgba(79,140,255,.18), transparent 60%),
-                  radial-gradient(900px 600px at 90% 30%, rgba(43,213,118,.12), transparent 55%),
-                  var(--bg);
-      color:var(--text);
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:linear-gradient(180deg,#070b16,#0b1020);
+      color:var(--txt);
+      padding:18px;
     }
     header{
-      position:sticky; top:0;
-      backdrop-filter: blur(10px);
-      background: rgba(7,11,20,.72);
-      border-bottom: 1px solid var(--border);
-      z-index: 10;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
     }
-    .wrap{max-width:1100px; margin:0 auto; padding:14px 16px;}
-    .top{
-      display:flex; gap:14px; align-items:center; justify-content:space-between;
+    h1{
+      font-size:18px;
+      margin:0;
+      letter-spacing:.2px;
     }
-    .brand{
-      display:flex; gap:12px; align-items:center;
+    .sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
     }
-    .logo{
-      width:42px; height:42px;
-      border-radius:14px;
-      overflow:hidden;
-      background: linear-gradient(135deg, rgba(79,140,255,.25), rgba(43,213,118,.12));
-      border:1px solid var(--border);
-      box-shadow: var(--shadow);
-      display:flex; align-items:center; justify-content:center;
-    }
-    .logo img{width:100%; height:100%; object-fit:cover}
-    .title h1{margin:0; font-size:16px; letter-spacing:.3px}
-    .title p{margin:2px 0 0; font-size:12px; color:var(--muted)}
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      transition:.15s;
-      font-weight:650;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
-    .btn:active{transform: translateY(0px)}
-    .btn.primary{background: rgba(79,140,255,.16); border-color: rgba(79,140,255,.35)}
-    .btn.danger{background: rgba(255,77,109,.12); border-color: rgba(255,77,109,.35)}
-    .btn.ok{background: rgba(43,213,118,.12); border-color: rgba(43,213,118,.35)}
-    .btn.small{padding:8px 10px; border-radius:12px; font-size:13px}
     .grid{
       display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
+      grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
       gap:14px;
     }
-    @media (max-width: 860px){ .grid{grid-template-columns: repeat(2, minmax(0,1fr));} }
-    @media (max-width: 520px){ .grid{grid-template-columns: 1fr;} }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--line);
+      border-radius:18px;
       padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
-    .card h2{margin:0; font-size:15px}
-    .card p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.3}
-    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-    .spacer{height:14px}
-    input, textarea, select{
+    .card h2{
+      margin:0 0 6px 0;
+      font-size:16px;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    button, .btn{
+      border:none;
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--btn);
+      color:white;
+      transition:.15s;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    button:hover, .btn:hover{transform:translateY(-1px)}
+    .ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--txt);
+    }
+    .danger{
+      background:var(--danger);
+    }
+    .ok{
+      background:var(--ok);
+      color:#06220f;
+    }
+    .warn{
+      background:var(--warn);
+      color:#2a1b00;
+    }
+    .mini{
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:10px;
+      line-height:1.35;
+    }
+    .divider{
+      height:1px;
+      background:var(--line);
+      margin:12px 0;
+      opacity:.9;
+    }
+    textarea{
       width:100%;
-      padding:12px 12px;
+      min-height:92px;
       border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--text);
+      border:1px solid var(--line);
+      background:#0a1022;
+      color:var(--txt);
+      padding:12px;
       outline:none;
-    }
-    input::placeholder, textarea::placeholder{color: rgba(234,241,255,.45)}
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-size:12px;
-      font-weight:650;
-    }
-    .pill.warn{color:#ffe08a; border-color: rgba(255,204,0,.35); background: rgba(255,204,0,.08)}
-    .pill.ok{color:#93ffbf; border-color: rgba(43,213,118,.35); background: rgba(43,213,118,.08)}
-    .pill.bad{color:#ff9fb0; border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08)}
-    .section-title{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      margin: 6px 0 10px;
-    }
-    .section-title h3{margin:0; font-size:14px}
-    .muted{color:var(--muted); font-size:13px}
-    .table{
-      width:100%;
-      border-collapse: collapse;
-      overflow:hidden;
-      border-radius: 16px;
-      border:1px solid var(--border);
-    }
-    .table th, .table td{
-      padding:10px 10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      resize:vertical;
       font-size:13px;
-      vertical-align: top;
+      line-height:1.4;
     }
-    .table th{
-      text-align:left;
-      color: rgba(234,241,255,.75);
-      background: rgba(255,255,255,.03);
+    input[type="text"]{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0a1022;
+      color:var(--txt);
+      padding:10px 12px;
+      outline:none;
+      font-size:13px;
     }
-    .table tr:last-child td{border-bottom:none}
     .tag{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-width:26px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
       padding:6px 10px;
-      border-radius: 999px;
-      font-weight:800;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
       font-size:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      margin-top:8px;
     }
-    .tag.C{border-color: rgba(43,213,118,.35); background: rgba(43,213,118,.08); color:#b7ffd3}
-    .tag.F{border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08); color:#ffb7c3}
-    .footer-note{color: rgba(234,241,255,.45); font-size:12px}
-    .divider{height:1px; background: rgba(255,255,255,.06); margin:12px 0}
-    .hidden{display:none !important}
+    .log{
+      margin-top:10px;
+      padding:10px;
+      border-radius:14px;
+      border:1px dashed var(--line);
+      background:rgba(0,0,0,.12);
+      max-height:220px;
+      overflow:auto;
+      font-size:12px;
+      line-height:1.35;
+    }
+    .log strong{color:#fff}
+    .muted{color:var(--muted)}
+    footer{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      opacity:.9;
+    }
   </style>
 </head>
 
 <body>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="logo" title="Busca Ativa JG">
-          <img src="./icon-192.png" alt="Ícone">
-        </div>
-        <div class="title">
-          <h1>Busca Ativa JG</h1>
-          <p>Controle rápido de faltas + WhatsApp por turma</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <button class="btn small" id="btnBackup">Exportar</button>
-        <button class="btn small" id="btnRestore">Importar</button>
-        <button class="btn small danger" id="btnResetAll">Zerar tudo</button>
-      </div>
+  <header>
+    <div>
+      <h1>📌 Busca Ativa – Escola Estadual João Guidotti</h1>
+      <div class="sub">Registro de faltas + mensagem pronta + atalho direto para WhatsApp por turma.</div>
     </div>
-  </div>
-</header>
+    <button class="ghost mini" onclick="resetAll()">🧹 Limpar tudo</button>
+  </header>
 
-<main class="wrap">
-  <div class="spacer"></div>
-
-  <!-- Quick Actions -->
-  <div class="card">
-    <div class="section-title">
-      <h3>⚡ Busca rápida</h3>
-      <span class="pill" id="pillInfo">Pronto</span>
+  <div class="card" style="margin-bottom:14px;">
+    <h2>⚙️ Configuração rápida</h2>
+    <div class="hint">
+      1) Cadastre o link do grupo WhatsApp em cada turma (uma vez só).<br>
+      2) Faça upload de um TXT/CSV com os dados (ou tire foto para registrar).<br>
+      3) O app detecta automaticamente <b>2 ou mais F consecutivos</b> e gera a mensagem padrão.
     </div>
-
-    <div class="grid">
-      <div>
-        <label class="muted">Buscar aluno (nome)</label>
-        <input id="searchName" placeholder="Digite parte do nome..." />
-      </div>
-
-      <div>
-        <label class="muted">Filtrar turma</label>
-        <select id="filterTurma"></select>
-      </div>
-
-      <div>
-        <label class="muted">Atalho</label>
-        <select id="quickFilter">
-          <option value="all">Todos</option>
-          <option value="alerta">⚠️ 2+ faltas consecutivas</option>
-          <option value="avisado">📩 Já avisado</option>
-          <option value="pendente">⏳ Pendente de aviso</option>
-        </select>
-      </div>
-    </div>
-
     <div class="divider"></div>
-
-    <div class="row">
-      <button class="btn primary" id="btnViewAlertas">⚠️ Ver alertas</button>
-      <button class="btn" id="btnViewHistorico">📚 Histórico de mensagens</button>
-      <button class="btn ok" id="btnNovaChamada">📝 Nova chamada</button>
-    </div>
-
-    <p class="footer-note" style="margin-top:10px">
-      Dica: o app detecta automaticamente alunos com <b>2 ou mais faltas consecutivas</b>.
-    </p>
-  </div>
-
-  <div class="spacer"></div>
-
-  <!-- Turmas -->
-  <div class="card">
-    <div class="section-title">
-      <h3>🏫 Turmas</h3>
-      <span class="muted">Clique para gerenciar</span>
-    </div>
-    <div class="grid" id="turmasGrid"></div>
-  </div>
-
-  <div class="spacer"></div>
-
-  <!-- Painel Turma -->
-  <div class="card hidden" id="turmaPanel">
-    <div class="section-title">
-      <h3 id="turmaTitle">Turma</h3>
-      <div class="row">
-        <button class="btn small" id="btnVoltar">⬅️ Voltar</button>
-        <button class="btn small primary" id="btnWhatsTurma">💬 WhatsApp</button>
-        <button class="btn small" id="btnConfigTurma">⚙️ Configurar</button>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="card" style="padding:12px">
-        <h2>➕ Adicionar aluno</h2>
-        <p>Cadastre alunos para registrar presença/falta.</p>
-        <div class="spacer"></div>
-        <input id="novoAlunoNome" placeholder="Nome do aluno..." />
-        <div class="spacer"></div>
-        <button class="btn ok" id="btnAddAluno">Adicionar</button>
-      </div>
-
-      <div class="card" style="padding:12px">
-        <h2>📝 Registrar chamada</h2>
-        <p>Marque C (presença) ou F (falta) para cada aluno.</p>
-        <div class="spacer"></div>
-        <button class="btn primary" id="btnAbrirChamada">Abrir chamada da turma</button>
-      </div>
-
-      <div class="card" style="padding:12px">
-        <h2>⚠️ Alertas da turma</h2>
-        <p>Lista automática de alunos com 2+ faltas consecutivas.</p>
-        <div class="spacer"></div>
-        <button class="btn" id="btnAlertasTurma">Ver alertas</button>
-      </div>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="section-title">
-      <h3>👥 Alunos cadastrados</h3>
-      <span class="muted" id="turmaStats"></span>
-    </div>
-
-    <div style="overflow:auto">
-      <table class="table" id="alunosTable"></table>
+    <div class="hint">
+      <b>Formato recomendado do arquivo (TXT ou CSV):</b><br>
+      Cada linha = um aluno.<br>
+      Exemplo:<br>
+      <span class="muted">MARIA EDUARDA; C C F F C</span><br>
+      <span class="muted">JOÃO PEDRO; C F F F C</span><br><br>
+      O app entende automaticamente <b>F</b> e <b>C</b>.
     </div>
   </div>
 
-  <div class="spacer"></div>
+  <div id="grid" class="grid"></div>
 
-  <!-- Modal simples -->
-  <div class="card hidden" id="modal">
-    <div class="section-title">
-      <h3 id="modalTitle">Modal</h3>
-      <button class="btn small" id="btnCloseModal">Fechar</button>
-    </div>
-    <div id="modalBody"></div>
-  </div>
-
-  <div class="spacer"></div>
-</main>
+  <footer>
+    Feito para uso escolar. Dados ficam somente no seu navegador (LocalStorage).
+  </footer>
 
 <script>
-/* ============================
-   DADOS (localStorage)
-============================ */
-const TURMAS_FIXAS = ["6ºA","6ºB","6ºC","7ºA","7ºB","8ºA","8ºB","9ºA","9ºB"];
-const STORAGE_KEY = "busca_ativa_jg_v2";
+/* ==============================
+   TURMAS FIXAS (cards)
+================================ */
+const TURMAS = [
+  "1ºA", "1ºB", "1ºC",
+  "2º Desenvolvimento", "2º Logística", "2ºC",
+  "3ºA Vendas", "3ºB Logística", "3ºC Desenvolvimento", "3ºD"
+];
 
-function nowISO(){ return new Date().toISOString(); }
-function fmtDate(iso){
-  try{
-    const d = new Date(iso);
-    return d.toLocaleString("pt-BR");
-  }catch(e){ return iso; }
+/* ==============================
+   STORAGE
+================================ */
+function keyWhats(turma){ return `whats_${turma}`; }
+function keyLog(turma){ return `log_${turma}`; }
+function keyFotos(turma){ return `fotos_${turma}`; }
+
+function getLog(turma){
+  return JSON.parse(localStorage.getItem(keyLog(turma)) || "[]");
 }
-
-function defaultDB(){
-  const turmas = {};
-  TURMAS_FIXAS.forEach(t => {
-    turmas[t] = {
-      whatsappLink: "",
-      alunos: [] // {id, nome, registros: [ {date, mark:'C'|'F'} ], avisos:[{date, msg}]}
-    };
+function setLog(turma, arr){
+  localStorage.setItem(keyLog(turma), JSON.stringify(arr));
+}
+function addLog(turma, obj){
+  const arr = getLog(turma);
+  arr.unshift(obj);
+  setLog(turma, arr);
+}
+function getWhats(turma){
+  return localStorage.getItem(keyWhats(turma)) || "";
+}
+function setWhats(turma, val){
+  localStorage.setItem(keyWhats(turma), val);
+}
+function resetAll(){
+  if(!confirm("Tem certeza que deseja limpar tudo? (Whats + histórico)")) return;
+  TURMAS.forEach(t=>{
+    localStorage.removeItem(keyWhats(t));
+    localStorage.removeItem(keyLog(t));
+    localStorage.removeItem(keyFotos(t));
   });
-  return {
-    version: 2,
-    createdAt: nowISO(),
-    turmas,
-    historicoMensagens: [] // {date, turma, aluno, faltasConsec, msg}
-  };
+  render();
 }
 
-function loadDB(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return defaultDB();
-  try{
-    const db = JSON.parse(raw);
-    // migração simples
-    if(!db.turmas) return defaultDB();
-    TURMAS_FIXAS.forEach(t=>{
-      if(!db.turmas[t]){
-        db.turmas[t] = { whatsappLink:"", alunos:[] };
-      }
-      if(!db.turmas[t].alunos) db.turmas[t].alunos = [];
-      db.turmas[t].alunos.forEach(a=>{
-        if(!a.registros) a.registros = [];
-        if(!a.avisos) a.avisos = [];
-      });
-    });
-    if(!db.historicoMensagens) db.historicoMensagens = [];
-    return db;
-  }catch(e){
-    return defaultDB();
-  }
-}
+/* ==============================
+   FUNÇÕES DE ANÁLISE
+================================ */
 
-function saveDB(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
-}
-
-let DB = loadDB();
-
-/* ============================
-   UI Helpers
-============================ */
-const $ = (id) => document.getElementById(id);
-
-function setPill(text, type=""){
-  const pill = $("pillInfo");
-  pill.textContent = text;
-  pill.className = "pill " + (type || "");
-}
-
-function uid(){
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
-
-/* ============================
-   Estado
-============================ */
-let currentTurma = null;
-
-/* ============================
-   Render Turmas
-============================ */
-function renderTurmas(){
-  const grid = $("turmasGrid");
-  grid.innerHTML = "";
-
-  TURMAS_FIXAS.forEach(turma=>{
-    const t = DB.turmas[turma];
-    const total = t.alunos.length;
-    const alertas = getAlertasTurma(turma).length;
-    const linkOk = (t.whatsappLink || "").includes("chat.whatsapp.com");
-
-    const div = document.createElement("div");
-    div.className = "card";
-    div.style.cursor = "pointer";
-
-    div.innerHTML = `
-      <div class="row" style="justify-content:space-between">
-        <h2 style="margin:0">${turma}</h2>
-        ${alertas>0 ? `<span class="pill warn">⚠️ ${alertas}</span>` : `<span class="pill ok">OK</span>`}
-      </div>
-      <p>${total} aluno(s) cadastrados</p>
-      <div class="row" style="margin-top:10px">
-        <span class="pill ${linkOk ? "ok" : "bad"}">${linkOk ? "WhatsApp OK" : "Sem link"}</span>
-        <span class="pill">Abrir</span>
-      </div>
-    `;
-
-    div.onclick = ()=> openTurma(turma);
-    grid.appendChild(div);
-  });
-}
-
-/* ============================
-   Turma Panel
-============================ */
-function openTurma(turma){
-  currentTurma = turma;
-  $("turmaPanel").classList.remove("hidden");
-  $("turmaTitle").textContent = `Turma ${turma}`;
-  $("turmaStats").textContent = "";
-  $("novoAlunoNome").value = "";
-  renderAlunosTable();
-  updateTurmaStats();
-  window.scrollTo({top: 0, behavior:"smooth"});
-}
-
-function closeTurma(){
-  currentTurma = null;
-  $("turmaPanel").classList.add("hidden");
-  renderTurmas();
-}
-
-function updateTurmaStats(){
-  if(!currentTurma) return;
-  const t = DB.turmas[currentTurma];
-  const total = t.alunos.length;
-  const alertas = getAlertasTurma(currentTurma).length;
-  $("turmaStats").textContent = `${total} aluno(s) • ${alertas} alerta(s)`;
-}
-
-/* ============================
-   Alunos
-============================ */
-function addAluno(){
-  if(!currentTurma) return;
-  const nome = $("novoAlunoNome").value.trim();
-  if(!nome){
-    alert("Digite o nome do aluno.");
-    return;
-  }
-  DB.turmas[currentTurma].alunos.push({
-    id: uid(),
-    nome,
-    registros: [],
-    avisos: []
-  });
-  saveDB();
-  $("novoAlunoNome").value = "";
-  renderAlunosTable();
-  updateTurmaStats();
-  renderTurmas();
-}
-
-function delAluno(alunoId){
-  if(!currentTurma) return;
-  if(!confirm("Excluir este aluno? Isso apaga registros e avisos dele.")) return;
-  const t = DB.turmas[currentTurma];
-  t.alunos = t.alunos.filter(a => a.id !== alunoId);
-  saveDB();
-  renderAlunosTable();
-  updateTurmaStats();
-  renderTurmas();
-}
-
-function renderAlunosTable(){
-  if(!currentTurma) return;
-  const t = DB.turmas[currentTurma];
-
-  let html = `
-    <tr>
-      <th>Aluno</th>
-      <th>Último</th>
-      <th>Consec.</th>
-      <th>Ações</th>
-    </tr>
-  `;
-
-  const alunos = [...t.alunos].sort((a,b)=> a.nome.localeCompare(b.nome, "pt-BR"));
-
-  alunos.forEach(a=>{
-    const last = a.registros.length ? a.registros[a.registros.length-1] : null;
-    const consec = faltasConsecutivas(a);
-    const tag = last ? `<span class="tag ${last.mark}">${last.mark}</span>` : `<span class="tag">—</span>`;
-    const warn = consec >= 2 ? `<span class="pill warn">⚠️ ${consec}</span>` : `<span class="pill">0</span>`;
-
-    html += `
-      <tr>
-        <td><b>${escapeHTML(a.nome)}</b></td>
-        <td>${tag}</td>
-        <td>${warn}</td>
-        <td>
-          <div class="row">
-            <button class="btn small ok" onclick="markAluno('${a.id}','C')">C</button>
-            <button class="btn small danger" onclick="markAluno('${a.id}','F')">F</button>
-            <button class="btn small" onclick="openAvisar('${a.id}')">📩</button>
-            <button class="btn small danger" onclick="delAluno('${a.id}')">🗑️</button>
-          </div>
-        </td>
-      </tr>
-    `;
-  });
-
-  $("alunosTable").innerHTML = html;
-}
-
-function escapeHTML(s){
-  return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-}
-
-/* ============================
-   Marcação C/F
-============================ */
-function markAluno(alunoId, mark){
-  if(!currentTurma) return;
-  const t = DB.turmas[currentTurma];
-  const a = t.alunos.find(x=>x.id===alunoId);
-  if(!a) return;
-
-  a.registros.push({ date: nowISO(), mark });
-  saveDB();
-  renderAlunosTable();
-  updateTurmaStats();
-  renderTurmas();
-}
-
-/* ============================
-   Faltas consecutivas
-============================ */
-function faltasConsecutivas(aluno){
-  // conta faltas seguidas do fim para trás
+// Detecta 2 ou mais F consecutivos dentro de uma sequência
+function temDuasFaltasConsecutivas(seq){
+  // seq = array de letras, ex: ["C","C","F","F","C"]
   let count = 0;
-  for(let i=aluno.registros.length-1; i>=0; i--){
-    if(aluno.registros[i].mark === "F") count++;
-    else break;
-  }
-  return count;
-}
-
-function getAlertasTurma(turma){
-  const t = DB.turmas[turma];
-  const arr = [];
-  t.alunos.forEach(a=>{
-    const c = faltasConsecutivas(a);
-    if(c >= 2){
-      arr.push({ aluno: a, consec: c });
+  for(const ch of seq){
+    if(ch === "F"){
+      count++;
+      if(count >= 2) return true;
+    }else{
+      count = 0;
     }
-  });
-  return arr.sort((x,y)=> y.consec - x.consec);
+  }
+  return false;
 }
 
-/* ============================
-   WhatsApp
-============================ */
-function openWhatsTurma(){
-  if(!currentTurma) return;
-  const link = (DB.turmas[currentTurma].whatsappLink || "").trim();
+// Converte uma linha em {nome, seq[]}
+function parseLinha(line){
+  // Aceita separadores ; , | ou tab
+  const parts = line.split(/;|,|\||\t/).map(s=>s.trim()).filter(Boolean);
+  if(parts.length < 2) return null;
+
+  const nome = parts[0];
+  const resto = parts.slice(1).join(" ");
+  // Extrai apenas C e F
+  const seq = (resto.toUpperCase().match(/[CF]/g) || []);
+  if(seq.length === 0) return null;
+
+  return { nome, seq };
+}
+
+// Lê o arquivo e retorna lista de alunos com faltas consecutivas
+function analisarTexto(text){
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const faltosos = [];
+
+  for(const line of lines){
+    const obj = parseLinha(line);
+    if(!obj) continue;
+
+    if(temDuasFaltasConsecutivas(obj.seq)){
+      faltosos.push(obj.nome);
+    }
+  }
+  return faltosos;
+}
+
+/* ==============================
+   MENSAGEM PADRÃO (MODELO B COMPLETO)
+================================ */
+function gerarMensagemCompleta(turma, nomes){
+  const data = new Date().toLocaleDateString("pt-BR");
+
+  let lista = nomes.map(n=>`- ${n}`).join("\n");
+
+  return `Boa tarde.
+
+A Escola Estadual João Guidotti informa que consta no registro de frequência 2 (duas) ou mais faltas consecutivas do(a) aluno(a) abaixo:
+
+${lista}
+
+Reforçamos que a presença do(a) estudante na escola é fundamental para o acompanhamento das aulas e do processo de aprendizagem, pois as faltas acarretam prejuízos pedagógicos, bem como institucionais.
+
+Solicitamos, por gentileza, que a família verifique a situação e, se necessário, apresente justificativa.
+
+Turma: ${turma}
+Data: ${data}
+
+Atenciosamente,
+Escola Estadual João Guidotti`;
+}
+
+/* ==============================
+   WHATSAPP
+================================ */
+function abrirWhats(turma){
+  const link = getWhats(turma);
   if(!link){
-    alert("Esta turma ainda não tem link do grupo do WhatsApp.\n\nClique em Configurar e cole o link.");
+    alert("Cadastre primeiro o link do grupo WhatsApp dessa turma.");
     return;
   }
   window.open(link, "_blank");
 }
 
-function openAvisar(alunoId){
-  if(!currentTurma) return;
-  const t = DB.turmas[currentTurma];
-  const a = t.alunos.find(x=>x.id===alunoId);
-  if(!a) return;
-
-  const link = (t.whatsappLink || "").trim();
+function enviarMensagemWhats(turma, msg){
+  const link = getWhats(turma);
   if(!link){
-    alert("Sem link do WhatsApp desta turma. Configure primeiro.");
+    alert("Cadastre primeiro o link do grupo WhatsApp dessa turma.");
     return;
   }
 
-  const consec = faltasConsecutivas(a);
-  const msg = buildMensagem(currentTurma, a.nome, consec);
-
-  // arquiva antes
-  DB.historicoMensagens.unshift({
-    date: nowISO(),
-    turma: currentTurma,
-    aluno: a.nome,
-    faltasConsec: consec,
-    msg
+  // Se o link for de convite do grupo, não dá pra abrir direto com texto.
+  // Então: abre o link do grupo e copia mensagem.
+  navigator.clipboard.writeText(msg).then(()=>{
+    window.open(link, "_blank");
+    alert("Mensagem copiada! Agora cole no grupo do WhatsApp.");
+  }).catch(()=>{
+    window.open(link, "_blank");
+    alert("Abra o WhatsApp e cole manualmente a mensagem.");
   });
-
-  a.avisos.push({ date: nowISO(), msg });
-  saveDB();
-
-  // abre WhatsApp com mensagem (funciona no celular e no PC)
-  const url = link + "?text=" + encodeURIComponent(msg);
-  window.open(url, "_blank");
-
-  setPill("Mensagem arquivada ✔", "ok");
-  renderAlunosTable();
-  renderTurmas();
 }
 
-function buildMensagem(turma, alunoNome, faltasConsec){
-  const f = faltasConsec >= 2 ? `${faltasConsec} faltas consecutivas` : "faltas registradas";
-  return `Olá, responsáveis. 👋
-
-Turma: ${turma}
-Aluno(a): ${alunoNome}
-
-Identificamos ${f}.
-
-Por gentileza, verifiquem o motivo e nos deem um retorno.
-
-Escola Estadual João Guidotti
-( Busca Ativa JG )`;
-}
-
-/* ============================
-   Modal
-============================ */
-function openModal(title, html){
-  $("modalTitle").textContent = title;
-  $("modalBody").innerHTML = html;
-  $("modal").classList.remove("hidden");
-  window.scrollTo({top: 0, behavior:"smooth"});
-}
-function closeModal(){
-  $("modal").classList.add("hidden");
-}
-
-/* ============================
-   Config turma
-============================ */
-function openConfigTurma(){
-  if(!currentTurma) return;
-  const t = DB.turmas[currentTurma];
-
-  openModal("⚙️ Configurar turma " + currentTurma, `
-    <div class="card" style="padding:12px">
-      <p class="muted">Cole abaixo o link do grupo do WhatsApp (formato chat.whatsapp.com)</p>
-      <input id="inputWhats" placeholder="https://chat.whatsapp.com/..." value="${escapeHTML(t.whatsappLink || "")}">
-      <div class="spacer"></div>
-      <button class="btn ok" onclick="saveConfigTurma()">Salvar</button>
-    </div>
-  `);
-}
-
-function saveConfigTurma(){
-  const v = document.getElementById("inputWhats").value.trim();
-  DB.turmas[currentTurma].whatsappLink = v;
-  saveDB();
-  closeModal();
-  renderTurmas();
-  setPill("Turma configurada ✔", "ok");
-}
-
-/* ============================
-   Alertas / Histórico
-============================ */
-function viewAlertas(){
-  const turma = $("filterTurma").value;
-  let alertas = [];
-
-  if(turma === "ALL"){
-    TURMAS_FIXAS.forEach(t=>{
-      getAlertasTurma(t).forEach(x=>{
-        alertas.push({ turma: t, ...x });
-      });
+/* ==============================
+   FOTO (registro)
+================================ */
+function salvarFoto(turma, file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const fotos = JSON.parse(localStorage.getItem(keyFotos(turma)) || "[]");
+    fotos.unshift({
+      data: new Date().toISOString(),
+      img: reader.result
     });
-  }else{
-    getAlertasTurma(turma).forEach(x=>{
-      alertas.push({ turma, ...x });
-    });
-  }
-
-  if(!alertas.length){
-    openModal("⚠️ Alertas", `<p class="muted">Nenhum aluno com 2+ faltas consecutivas no momento.</p>`);
-    return;
-  }
-
-  let html = `<div style="overflow:auto"><table class="table">
-    <tr>
-      <th>Turma</th><th>Aluno</th><th>Faltas consec.</th><th>Ação</th>
-    </tr>
-  `;
-
-  alertas.forEach(x=>{
-    html += `
-      <tr>
-        <td><b>${x.turma}</b></td>
-        <td>${escapeHTML(x.aluno.nome)}</td>
-        <td><span class="pill warn">⚠️ ${x.consec}</span></td>
-        <td>
-          <button class="btn small primary" onclick="openTurma('${x.turma}'); closeModal();">Abrir</button>
-        </td>
-      </tr>
-    `;
-  });
-
-  html += `</table></div>`;
-  openModal("⚠️ Alertas (2+ faltas consecutivas)", html);
-}
-
-function viewHistorico(){
-  const h = DB.historicoMensagens || [];
-  if(!h.length){
-    openModal("📚 Histórico de mensagens", `<p class="muted">Nenhuma mensagem arquivada ainda.</p>`);
-    return;
-  }
-
-  let html = `<div class="row">
-    <button class="btn small danger" onclick="clearHistorico()">🗑️ Limpar histórico</button>
-  </div>
-  <div class="spacer"></div>
-  <div style="overflow:auto"><table class="table">
-    <tr>
-      <th>Data</th><th>Turma</th><th>Aluno</th><th>Faltas</th><th>Mensagem</th>
-    </tr>
-  `;
-
-  h.slice(0, 250).forEach(x=>{
-    html += `
-      <tr>
-        <td>${fmtDate(x.date)}</td>
-        <td><b>${x.turma}</b></td>
-        <td>${escapeHTML(x.aluno)}</td>
-        <td><span class="pill warn">⚠️ ${x.faltasConsec || 0}</span></td>
-        <td style="max-width:420px; white-space:pre-wrap">${escapeHTML(x.msg)}</td>
-      </tr>
-    `;
-  });
-
-  html += `</table></div>`;
-  openModal("📚 Histórico de mensagens", html);
-}
-
-function clearHistorico(){
-  if(!confirm("Limpar TODO o histórico de mensagens?")) return;
-  DB.historicoMensagens = [];
-  saveDB();
-  closeModal();
-  setPill("Histórico limpo ✔", "ok");
-}
-
-/* ============================
-   Busca rápida
-============================ */
-function applySearch(){
-  const q = $("searchName").value.trim().toLowerCase();
-  const turma = $("filterTurma").value;
-  const quick = $("quickFilter").value;
-
-  let items = [];
-
-  const turmas = turma === "ALL" ? TURMAS_FIXAS : [turma];
-
-  turmas.forEach(t=>{
-    DB.turmas[t].alunos.forEach(a=>{
-      items.push({ turma: t, aluno: a });
-    });
-  });
-
-  if(q){
-    items = items.filter(x => x.aluno.nome.toLowerCase().includes(q));
-  }
-
-  if(quick === "alerta"){
-    items = items.filter(x => faltasConsecutivas(x.aluno) >= 2);
-  }
-
-  if(quick === "avisado"){
-    items = items.filter(x => (x.aluno.avisos || []).length > 0);
-  }
-
-  if(quick === "pendente"){
-    items = items.filter(x => faltasConsecutivas(x.aluno) >= 2 && (x.aluno.avisos || []).length === 0);
-  }
-
-  if(!items.length){
-    setPill("Nenhum resultado", "bad");
-    return;
-  }
-
-  setPill(`${items.length} encontrado(s)`, "ok");
-
-  // mostra modal com resultados
-  let html = `<div style="overflow:auto"><table class="table">
-    <tr><th>Turma</th><th>Aluno</th><th>Consec.</th><th>Ação</th></tr>
-  `;
-
-  items.slice(0, 200).forEach(x=>{
-    const c = faltasConsecutivas(x.aluno);
-    html += `
-      <tr>
-        <td><b>${x.turma}</b></td>
-        <td>${escapeHTML(x.aluno.nome)}</td>
-        <td>${c>=2 ? `<span class="pill warn">⚠️ ${c}</span>` : `<span class="pill">0</span>`}</td>
-        <td><button class="btn small primary" onclick="openTurma('${x.turma}'); closeModal();">Abrir</button></td>
-      </tr>
-    `;
-  });
-
-  html += `</table></div>`;
-  openModal("🔎 Resultados da busca", html);
-}
-
-/* ============================
-   Backup/Restore
-============================ */
-function exportDB(){
-  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "busca-ativa-jg-backup.json";
-  a.click();
-  URL.revokeObjectURL(url);
-  setPill("Backup exportado ✔", "ok");
-}
-
-function importDB(){
-  const inp = document.createElement("input");
-  inp.type = "file";
-  inp.accept = "application/json";
-  inp.onchange = async ()=>{
-    const file = inp.files[0];
-    if(!file) return;
-    const txt = await file.text();
-    try{
-      const obj = JSON.parse(txt);
-      if(!obj.turmas) throw new Error("inválido");
-      DB = obj;
-      saveDB();
-      closeModal();
-      closeTurma();
-      renderAll();
-      setPill("Backup importado ✔", "ok");
-    }catch(e){
-      alert("Arquivo inválido.");
-    }
+    localStorage.setItem(keyFotos(turma), JSON.stringify(fotos));
+    alert("Foto registrada com sucesso!");
   };
-  inp.click();
+  reader.readAsDataURL(file);
 }
 
-/* ============================
-   Reset total
-============================ */
-function resetAll(){
-  if(!confirm("Zerar TUDO? Isso apaga turmas, alunos, registros e histórico.")) return;
-  DB = defaultDB();
-  saveDB();
-  closeModal();
-  closeTurma();
-  renderAll();
-  setPill("Tudo zerado ✔", "ok");
+/* ==============================
+   UI
+================================ */
+function render(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  TURMAS.forEach(turma=>{
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const whats = getWhats(turma);
+    const log = getLog(turma);
+
+    card.innerHTML = `
+      <h2>🏫 ${turma}</h2>
+
+      <div class="tag">📌 Card da turma com Foto + Upload + Whats + Histórico</div>
+
+      <div style="margin-top:10px;">
+        <label class="muted" style="font-size:12px;">Link do grupo WhatsApp:</label>
+        <input type="text" id="w_${turma}" placeholder="Cole aqui o link do grupo..." value="${escapeHtml(whats)}" />
+        <div class="row">
+          <button class="mini ok" onclick="salvarWhats('${turma}')">💾 Salvar Whats</button>
+          <button class="mini ghost" onclick="abrirWhats('${turma}')">💬 Abrir grupo</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <label class="muted" style="font-size:12px;">📷 Foto da lista (registro):</label>
+        <input type="file" accept="image/*" capture="environment" id="foto_${turma}" />
+        <div class="hint">
+          A foto fica salva como <b>registro</b>. (OCR automático por foto exige etapa extra que vamos adicionar depois.)
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <label class="muted" style="font-size:12px;">📄 Upload do arquivo (TXT/CSV):</label>
+        <input type="file" accept=".txt,.csv" id="file_${turma}" />
+        <div class="row">
+          <button class="mini" onclick="processarArquivo('${turma}')">⚡ Ler e detectar faltas</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <label class="muted" style="font-size:12px;">🧾 Mensagem gerada:</label>
+        <textarea id="msg_${turma}" placeholder="Aqui vai aparecer a mensagem pronta..."></textarea>
+        <div class="row">
+          <button class="mini ok" onclick="salvarMensagem('${turma}')">📌 Arquivar</button>
+          <button class="mini" onclick="copiarMensagem('${turma}')">📋 Copiar</button>
+          <button class="mini ghost" onclick="enviarWhats('${turma}')">📲 Whats (colar)</button>
+          <button class="mini danger" onclick="limparHistorico('${turma}')">🗑️ Limpar histórico</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <label class="muted" style="font-size:12px;">📚 Histórico de mensagens (arquivadas):</label>
+        <div class="log" id="log_${turma}">
+          ${renderLogHtml(log)}
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+
+    // Eventos
+    const fotoInput = card.querySelector(`#foto_${cssId(turma)}`);
+    fotoInput.addEventListener("change", (e)=>{
+      const file = e.target.files?.[0];
+      if(file) salvarFoto(turma, file);
+    });
+  });
 }
 
-/* ============================
-   Nova chamada
-============================ */
-function novaChamada(){
-  openModal("📝 Nova chamada (manual)", `
-    <div class="card" style="padding:12px">
-      <p class="muted">
-        Para registrar chamada, abra uma turma e use os botões <b>C</b> e <b>F</b> em cada aluno.
-        <br><br>
-        (O modo foto/OCR será adicionado como atualização na próxima etapa.)
-      </p>
-    </div>
-  `);
+function salvarWhats(turma){
+  const input = document.getElementById(`w_${turma}`);
+  setWhats(turma, input.value.trim());
+  alert("WhatsApp salvo!");
 }
 
-/* ============================
-   Init
-============================ */
-function renderAll(){
-  // select turmas
-  $("filterTurma").innerHTML = `
-    <option value="ALL">Todas</option>
-    ${TURMAS_FIXAS.map(t=>`<option value="${t}">${t}</option>`).join("")}
-  `;
-
-  renderTurmas();
-}
-
-$("btnVoltar").onclick = closeTurma;
-$("btnAddAluno").onclick = addAluno;
-$("btnWhatsTurma").onclick = openWhatsTurma;
-$("btnConfigTurma").onclick = openConfigTurma;
-
-$("btnViewAlertas").onclick = viewAlertas;
-$("btnViewHistorico").onclick = viewHistorico;
-$("btnCloseModal").onclick = closeModal;
-
-$("btnBackup").onclick = exportDB;
-$("btnRestore").onclick = importDB;
-$("btnResetAll").onclick = resetAll;
-$("btnNovaChamada").onclick = novaChamada;
-
-$("searchName").addEventListener("input", ()=>{
-  if($("searchName").value.trim().length >= 3) applySearch();
-});
-$("filterTurma").addEventListener("change", ()=> setPill("Pronto"));
-$("quickFilter").addEventListener("change", ()=> setPill("Pronto"));
-
-$("btnAbrirChamada").onclick = ()=>{
-  alert("Chamada rápida: use os botões C e F na tabela de alunos.\n\n(O modo com lista completa e salvar por dia eu adiciono na próxima versão.)");
-};
-
-$("btnAlertasTurma").onclick = ()=>{
-  if(!currentTurma) return;
-  const list = getAlertasTurma(currentTurma);
-  if(!list.length){
-    openModal("⚠️ Alertas - " + currentTurma, `<p class="muted">Nenhum alerta nesta turma.</p>`);
+function processarArquivo(turma){
+  const input = document.getElementById(`file_${turma}`);
+  const file = input.files?.[0];
+  if(!file){
+    alert("Selecione um arquivo TXT ou CSV primeiro.");
     return;
   }
-  let html = `<div style="overflow:auto"><table class="table">
-    <tr><th>Aluno</th><th>Faltas</th><th>Ação</th></tr>
-  `;
-  list.forEach(x=>{
-    html += `
-      <tr>
-        <td>${escapeHTML(x.aluno.nome)}</td>
-        <td><span class="pill warn">⚠️ ${x.consec}</span></td>
-        <td><button class="btn small" onclick="openAvisar('${x.aluno.id}')">📩 Avisar</button></td>
-      </tr>
-    `;
-  });
-  html += `</table></div>`;
-  openModal("⚠️ Alertas - " + currentTurma, html);
-};
 
-renderAll();
-setPill("Carregado ✔", "ok");
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const text = reader.result;
+    const faltosos = analisarTexto(text);
 
-/* ============================
-   PWA Service Worker register
-============================ */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js");
+    if(faltosos.length === 0){
+      document.getElementById(`msg_${turma}`).value =
+        "Nenhum aluno com 2 ou mais faltas consecutivas foi detectado nesse arquivo.";
+      return;
+    }
+
+    const msg = gerarMensagemCompleta(turma, faltosos);
+    document.getElementById(`msg_${turma}`).value = msg;
+  };
+  reader.readAsText(file, "utf-8");
+}
+
+function salvarMensagem(turma){
+  const msg = document.getElementById(`msg_${turma}`).value.trim();
+  if(!msg){
+    alert("Nenhuma mensagem para arquivar.");
+    return;
+  }
+  addLog(turma, { data: new Date().toISOString(), msg });
+  render();
+}
+
+function copiarMensagem(turma){
+  const msg = document.getElementById(`msg_${turma}`).value.trim();
+  if(!msg){
+    alert("Nenhuma mensagem para copiar.");
+    return;
+  }
+  navigator.clipboard.writeText(msg).then(()=>{
+    alert("Mensagem copiada!");
+  }).catch(()=>{
+    alert("Não consegui copiar automaticamente. Selecione e copie manualmente.");
   });
 }
+
+function enviarWhats(turma){
+  const msg = document.getElementById(`msg_${turma}`).value.trim();
+  if(!msg){
+    alert("Nenhuma mensagem para enviar.");
+    return;
+  }
+  enviarMensagemWhats(turma, msg);
+}
+
+function limparHistorico(turma){
+  if(!confirm(`Deseja apagar TODO o histórico da turma ${turma}?`)) return;
+  localStorage.removeItem(keyLog(turma));
+  render();
+}
+
+/* ==============================
+   HELPERS
+================================ */
+function renderLogHtml(log){
+  if(!log || log.length === 0){
+    return `<span class="muted">Nenhuma mensagem arquivada ainda.</span>`;
+  }
+  return log.map(item=>{
+    const d = new Date(item.data).toLocaleString("pt-BR");
+    return `<div style="margin-bottom:10px;">
+      <strong>${d}</strong><br>
+      <span style="white-space:pre-wrap">${escapeHtml(item.msg)}</span>
+    </div>`;
+  }).join("<div class='divider'></div>");
+}
+
+function escapeHtml(str){
+  return (str || "").replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+  }[m]));
+}
+function cssId(turma){
+  return turma.replace(/\s+/g,"_").replace(/[^\w\-]/g,"_");
+}
+
+/* ==============================
+   SERVICE WORKER
+================================ */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+  });
+}
+
+render();
 </script>
 </body>
 </html>
- 
-  
-
-
-
-
-
-
-
-     
-      
-         
