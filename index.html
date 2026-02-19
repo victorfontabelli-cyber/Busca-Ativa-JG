@@ -37,9 +37,11 @@
     <div class="card"><h3>1ºA</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>1ºB</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>1ºC</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+
     <div class="card"><h3>2º Desenvolvimento</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>2º Logística</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>2ºC</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+
     <div class="card"><h3>3ºA Vendas</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>3ºB Logística</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
     <div class="card"><h3>3ºC Desenvolvimento</h3><p class="message">É da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
@@ -48,10 +50,90 @@
 
   <script src="service-worker.js"></script>
   <script>
-    // Deletar card
+    // Função para processar a lista
+    function processarLista(content, turma) {
+      const linhas = content.split(/\r?\n/);
+      let mensagens = [];
+      linhas.forEach(linha => {
+        const partes = linha.split(',');
+        const nome = partes[0];
+        const presencas = partes.slice(1);
+        
+        let faltasConsecutivas = 0;
+        let maxFaltas = 0;
+        presencas.forEach(p => {
+          if (p.trim().toUpperCase() === 'F') {
+            faltasConsecutivas++;
+            if(faltasConsecutivas > maxFaltas) maxFaltas = faltasConsecutivas;
+          } else {
+            faltasConsecutivas = 0;
+          }
+        });
+        
+        if(maxFaltas >= 2) {
+          mensagens.push(${nome} teve ${maxFaltas} faltas consecutivas na turma ${turma});
+        }
+      });
+
+      if(!localStorage.getItem('historico')) localStorage.setItem('historico','[]');
+      const historico = JSON.parse(localStorage.getItem('historico'));
+      historico.push(...mensagens);
+      localStorage.setItem('historico', JSON.stringify(historico));
+      alert(Processado ${mensagens.length} aluno(s) com faltas consecutivas na turma ${turma});
+    }
+
+    // Botões foto
+    document.querySelectorAll('.photo').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        const turma = e.target.closest('.card').querySelector('h3').innerText;
+        try {
+          const [fileHandle] = await window.showOpenFilePicker({ types:[{ description: 'Text/CSV', accept:{ 'text/plain': ['.txt','.csv'] } }]});
+          const file = await fileHandle.getFile();
+          const content = await file.text();
+          processarLista(content, turma);
+        } catch(err) {
+          console.log('Nenhum arquivo selecionado ou erro:', err);
+        }
+      });
+    });
+
+    // Botões upload
+    document.querySelectorAll('.upload').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const turma = e.target.closest('.card').querySelector('h3').innerText;
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.txt,.csv';
+        input.onchange = evt => {
+          const file = evt.target.files[0];
+          const reader = new FileReader();
+          reader.onload = () => processarLista(reader.result, turma);
+          reader.readAsText(file);
+        };
+        input.click();
+      });
+    });
+
+    // Botão WhatsApp
+    document.querySelectorAll('.whatsapp').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const turma = e.target.closest('.card').querySelector('h3').innerText;
+        const historico = JSON.parse(localStorage.getItem('historico') || '[]');
+        const mensagem = historico.filter(msg => msg.includes(turma)).join('\n');
+        if(!mensagem) {
+          alert('Nenhuma falta registrada para esta turma ainda.');
+          return;
+        }
+        const url = https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)};
+        window.open(url,'_blank');
+      });
+    });
+
+    // Botão excluir card
     document.querySelectorAll('.delete').forEach(btn => {
       btn.addEventListener('click', e => e.target.closest('.card').remove());
     });
+
   </script>
 </body>
 </html>
