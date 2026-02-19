@@ -1,4 +1,964 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busca Ativa JG</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <style>
+    :root{
+      --bg:#070b14;
+      --card:#0b1220;
+      --card2:#0e1930;
+      --border:rgba(255,255,255,.08);
+      --text:#eaf1ff;
+      --muted:rgba(234,241,255,.72);
+      --accent:#4f8cff;
+      --ok:#2bd576;
+      --bad:#ff4d6d;
+      --warn:#ffcc00;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 600px at 20% 10%, rgba(79,140,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at 90% 30%, rgba(43,213,118,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0;
+      backdrop-filter: blur(10px);
+      background: rgba(7,11,20,.72);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:14px 16px;}
+    .top{
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo{
+      width:42px; height:42px;
+      border-radius:14px;
+      overflow:hidden;
+      background: linear-gradient(135deg, rgba(79,140,255,.25), rgba(43,213,118,.12));
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    .title h1{margin:0; font-size:16px; letter-spacing:.3px}
+    .title p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      transition:.15s;
+      font-weight:650;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
+    .btn:active{transform: translateY(0px)}
+    .btn.primary{background: rgba(79,140,255,.16); border-color: rgba(79,140,255,.35)}
+    .btn.danger{background: rgba(255,77,109,.12); border-color: rgba(255,77,109,.35)}
+    .btn.ok{background: rgba(43,213,118,.12); border-color: rgba(43,213,118,.35)}
+    .btn.small{padding:8px 10px; border-radius:12px; font-size:13px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+    @media (max-width: 860px){ .grid{grid-template-columns: repeat(2, minmax(0,1fr));} }
+    @media (max-width: 520px){ .grid{grid-template-columns: 1fr;} }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{margin:0; font-size:15px}
+    .card p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.3}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .spacer{height:14px}
+    input, textarea, select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      outline:none;
+    }
+    input::placeholder, textarea::placeholder{color: rgba(234,241,255,.45)}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size:12px;
+      font-weight:650;
+    }
+    .pill.warn{color:#ffe08a; border-color: rgba(255,204,0,.35); background: rgba(255,204,0,.08)}
+    .pill.ok{color:#93ffbf; border-color: rgba(43,213,118,.35); background: rgba(43,213,118,.08)}
+    .pill.bad{color:#ff9fb0; border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08)}
+    .section-title{
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      margin: 6px 0 10px;
+    }
+    .section-title h3{margin:0; font-size:14px}
+    .muted{color:var(--muted); font-size:13px}
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 16px;
+      border:1px solid var(--border);
+    }
+    .table th, .table td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:13px;
+      vertical-align: top;
+    }
+    .table th{
+      text-align:left;
+      color: rgba(234,241,255,.75);
+      background: rgba(255,255,255,.03);
+    }
+    .table tr:last-child td{border-bottom:none}
+    .tag{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:26px;
+      padding:6px 10px;
+      border-radius: 999px;
+      font-weight:800;
+      font-size:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    .tag.C{border-color: rgba(43,213,118,.35); background: rgba(43,213,118,.08); color:#b7ffd3}
+    .tag.F{border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08); color:#ffb7c3}
+    .footer-note{color: rgba(234,241,255,.45); font-size:12px}
+    .divider{height:1px; background: rgba(255,255,255,.06); margin:12px 0}
+    .hidden{display:none !important}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo" title="Busca Ativa JG">
+          <img src="./icon-192.png" alt="Ícone">
+        </div>
+        <div class="title">
+          <h1>Busca Ativa JG</h1>
+          <p>Controle rápido de faltas + WhatsApp por turma</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn small" id="btnBackup">Exportar</button>
+        <button class="btn small" id="btnRestore">Importar</button>
+        <button class="btn small danger" id="btnResetAll">Zerar tudo</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="spacer"></div>
+
+  <!-- Quick Actions -->
+  <div class="card">
+    <div class="section-title">
+      <h3>⚡ Busca rápida</h3>
+      <span class="pill" id="pillInfo">Pronto</span>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label class="muted">Buscar aluno (nome)</label>
+        <input id="searchName" placeholder="Digite parte do nome..." />
+      </div>
+
+      <div>
+        <label class="muted">Filtrar turma</label>
+        <select id="filterTurma"></select>
+      </div>
+
+      <div>
+        <label class="muted">Atalho</label>
+        <select id="quickFilter">
+          <option value="all">Todos</option>
+          <option value="alerta">⚠️ 2+ faltas consecutivas</option>
+          <option value="avisado">📩 Já avisado</option>
+          <option value="pendente">⏳ Pendente de aviso</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <button class="btn primary" id="btnViewAlertas">⚠️ Ver alertas</button>
+      <button class="btn" id="btnViewHistorico">📚 Histórico de mensagens</button>
+      <button class="btn ok" id="btnNovaChamada">📝 Nova chamada</button>
+    </div>
+
+    <p class="footer-note" style="margin-top:10px">
+      Dica: o app detecta automaticamente alunos com <b>2 ou mais faltas consecutivas</b>.
+    </p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- Turmas -->
+  <div class="card">
+    <div class="section-title">
+      <h3>🏫 Turmas</h3>
+      <span class="muted">Clique para gerenciar</span>
+    </div>
+    <div class="grid" id="turmasGrid"></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- Painel Turma -->
+  <div class="card hidden" id="turmaPanel">
+    <div class="section-title">
+      <h3 id="turmaTitle">Turma</h3>
+      <div class="row">
+        <button class="btn small" id="btnVoltar">⬅️ Voltar</button>
+        <button class="btn small primary" id="btnWhatsTurma">💬 WhatsApp</button>
+        <button class="btn small" id="btnConfigTurma">⚙️ Configurar</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="padding:12px">
+        <h2>➕ Adicionar aluno</h2>
+        <p>Cadastre alunos para registrar presença/falta.</p>
+        <div class="spacer"></div>
+        <input id="novoAlunoNome" placeholder="Nome do aluno..." />
+        <div class="spacer"></div>
+        <button class="btn ok" id="btnAddAluno">Adicionar</button>
+      </div>
+
+      <div class="card" style="padding:12px">
+        <h2>📝 Registrar chamada</h2>
+        <p>Marque C (presença) ou F (falta) para cada aluno.</p>
+        <div class="spacer"></div>
+        <button class="btn primary" id="btnAbrirChamada">Abrir chamada da turma</button>
+      </div>
+
+      <div class="card" style="padding:12px">
+        <h2>⚠️ Alertas da turma</h2>
+        <p>Lista automática de alunos com 2+ faltas consecutivas.</p>
+        <div class="spacer"></div>
+        <button class="btn" id="btnAlertasTurma">Ver alertas</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="section-title">
+      <h3>👥 Alunos cadastrados</h3>
+      <span class="muted" id="turmaStats"></span>
+    </div>
+
+    <div style="overflow:auto">
+      <table class="table" id="alunosTable"></table>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- Modal simples -->
+  <div class="card hidden" id="modal">
+    <div class="section-title">
+      <h3 id="modalTitle">Modal</h3>
+      <button class="btn small" id="btnCloseModal">Fechar</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+
+  <div class="spacer"></div>
+</main>
+
+<script>
+/* ============================
+   DADOS (localStorage)
+============================ */
+const TURMAS_FIXAS = ["6ºA","6ºB","6ºC","7ºA","7ºB","8ºA","8ºB","9ºA","9ºB"];
+const STORAGE_KEY = "busca_ativa_jg_v2";
+
+function nowISO(){ return new Date().toISOString(); }
+function fmtDate(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString("pt-BR");
+  }catch(e){ return iso; }
+}
+
+function defaultDB(){
+  const turmas = {};
+  TURMAS_FIXAS.forEach(t => {
+    turmas[t] = {
+      whatsappLink: "",
+      alunos: [] // {id, nome, registros: [ {date, mark:'C'|'F'} ], avisos:[{date, msg}]}
+    };
+  });
+  return {
+    version: 2,
+    createdAt: nowISO(),
+    turmas,
+    historicoMensagens: [] // {date, turma, aluno, faltasConsec, msg}
+  };
+}
+
+function loadDB(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return defaultDB();
+  try{
+    const db = JSON.parse(raw);
+    // migração simples
+    if(!db.turmas) return defaultDB();
+    TURMAS_FIXAS.forEach(t=>{
+      if(!db.turmas[t]){
+        db.turmas[t] = { whatsappLink:"", alunos:[] };
+      }
+      if(!db.turmas[t].alunos) db.turmas[t].alunos = [];
+      db.turmas[t].alunos.forEach(a=>{
+        if(!a.registros) a.registros = [];
+        if(!a.avisos) a.avisos = [];
+      });
+    });
+    if(!db.historicoMensagens) db.historicoMensagens = [];
+    return db;
+  }catch(e){
+    return defaultDB();
+  }
+}
+
+function saveDB(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+}
+
+let DB = loadDB();
+
+/* ============================
+   UI Helpers
+============================ */
+const $ = (id) => document.getElementById(id);
+
+function setPill(text, type=""){
+  const pill = $("pillInfo");
+  pill.textContent = text;
+  pill.className = "pill " + (type || "");
+}
+
+function uid(){
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+/* ============================
+   Estado
+============================ */
+let currentTurma = null;
+
+/* ============================
+   Render Turmas
+============================ */
+function renderTurmas(){
+  const grid = $("turmasGrid");
+  grid.innerHTML = "";
+
+  TURMAS_FIXAS.forEach(turma=>{
+    const t = DB.turmas[turma];
+    const total = t.alunos.length;
+    const alertas = getAlertasTurma(turma).length;
+    const linkOk = (t.whatsappLink || "").includes("chat.whatsapp.com");
+
+    const div = document.createElement("div");
+    div.className = "card";
+    div.style.cursor = "pointer";
+
+    div.innerHTML = `
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">${turma}</h2>
+        ${alertas>0 ? `<span class="pill warn">⚠️ ${alertas}</span>` : `<span class="pill ok">OK</span>`}
+      </div>
+      <p>${total} aluno(s) cadastrados</p>
+      <div class="row" style="margin-top:10px">
+        <span class="pill ${linkOk ? "ok" : "bad"}">${linkOk ? "WhatsApp OK" : "Sem link"}</span>
+        <span class="pill">Abrir</span>
+      </div>
+    `;
+
+    div.onclick = ()=> openTurma(turma);
+    grid.appendChild(div);
+  });
+}
+
+/* ============================
+   Turma Panel
+============================ */
+function openTurma(turma){
+  currentTurma = turma;
+  $("turmaPanel").classList.remove("hidden");
+  $("turmaTitle").textContent = `Turma ${turma}`;
+  $("turmaStats").textContent = "";
+  $("novoAlunoNome").value = "";
+  renderAlunosTable();
+  updateTurmaStats();
+  window.scrollTo({top: 0, behavior:"smooth"});
+}
+
+function closeTurma(){
+  currentTurma = null;
+  $("turmaPanel").classList.add("hidden");
+  renderTurmas();
+}
+
+function updateTurmaStats(){
+  if(!currentTurma) return;
+  const t = DB.turmas[currentTurma];
+  const total = t.alunos.length;
+  const alertas = getAlertasTurma(currentTurma).length;
+  $("turmaStats").textContent = `${total} aluno(s) • ${alertas} alerta(s)`;
+}
+
+/* ============================
+   Alunos
+============================ */
+function addAluno(){
+  if(!currentTurma) return;
+  const nome = $("novoAlunoNome").value.trim();
+  if(!nome){
+    alert("Digite o nome do aluno.");
+    return;
+  }
+  DB.turmas[currentTurma].alunos.push({
+    id: uid(),
+    nome,
+    registros: [],
+    avisos: []
+  });
+  saveDB();
+  $("novoAlunoNome").value = "";
+  renderAlunosTable();
+  updateTurmaStats();
+  renderTurmas();
+}
+
+function delAluno(alunoId){
+  if(!currentTurma) return;
+  if(!confirm("Excluir este aluno? Isso apaga registros e avisos dele.")) return;
+  const t = DB.turmas[currentTurma];
+  t.alunos = t.alunos.filter(a => a.id !== alunoId);
+  saveDB();
+  renderAlunosTable();
+  updateTurmaStats();
+  renderTurmas();
+}
+
+function renderAlunosTable(){
+  if(!currentTurma) return;
+  const t = DB.turmas[currentTurma];
+
+  let html = `
+    <tr>
+      <th>Aluno</th>
+      <th>Último</th>
+      <th>Consec.</th>
+      <th>Ações</th>
+    </tr>
+  `;
+
+  const alunos = [...t.alunos].sort((a,b)=> a.nome.localeCompare(b.nome, "pt-BR"));
+
+  alunos.forEach(a=>{
+    const last = a.registros.length ? a.registros[a.registros.length-1] : null;
+    const consec = faltasConsecutivas(a);
+    const tag = last ? `<span class="tag ${last.mark}">${last.mark}</span>` : `<span class="tag">—</span>`;
+    const warn = consec >= 2 ? `<span class="pill warn">⚠️ ${consec}</span>` : `<span class="pill">0</span>`;
+
+    html += `
+      <tr>
+        <td><b>${escapeHTML(a.nome)}</b></td>
+        <td>${tag}</td>
+        <td>${warn}</td>
+        <td>
+          <div class="row">
+            <button class="btn small ok" onclick="markAluno('${a.id}','C')">C</button>
+            <button class="btn small danger" onclick="markAluno('${a.id}','F')">F</button>
+            <button class="btn small" onclick="openAvisar('${a.id}')">📩</button>
+            <button class="btn small danger" onclick="delAluno('${a.id}')">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  $("alunosTable").innerHTML = html;
+}
+
+function escapeHTML(s){
+  return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+
+/* ============================
+   Marcação C/F
+============================ */
+function markAluno(alunoId, mark){
+  if(!currentTurma) return;
+  const t = DB.turmas[currentTurma];
+  const a = t.alunos.find(x=>x.id===alunoId);
+  if(!a) return;
+
+  a.registros.push({ date: nowISO(), mark });
+  saveDB();
+  renderAlunosTable();
+  updateTurmaStats();
+  renderTurmas();
+}
+
+/* ============================
+   Faltas consecutivas
+============================ */
+function faltasConsecutivas(aluno){
+  // conta faltas seguidas do fim para trás
+  let count = 0;
+  for(let i=aluno.registros.length-1; i>=0; i--){
+    if(aluno.registros[i].mark === "F") count++;
+    else break;
+  }
+  return count;
+}
+
+function getAlertasTurma(turma){
+  const t = DB.turmas[turma];
+  const arr = [];
+  t.alunos.forEach(a=>{
+    const c = faltasConsecutivas(a);
+    if(c >= 2){
+      arr.push({ aluno: a, consec: c });
+    }
+  });
+  return arr.sort((x,y)=> y.consec - x.consec);
+}
+
+/* ============================
+   WhatsApp
+============================ */
+function openWhatsTurma(){
+  if(!currentTurma) return;
+  const link = (DB.turmas[currentTurma].whatsappLink || "").trim();
+  if(!link){
+    alert("Esta turma ainda não tem link do grupo do WhatsApp.\n\nClique em Configurar e cole o link.");
+    return;
+  }
+  window.open(link, "_blank");
+}
+
+function openAvisar(alunoId){
+  if(!currentTurma) return;
+  const t = DB.turmas[currentTurma];
+  const a = t.alunos.find(x=>x.id===alunoId);
+  if(!a) return;
+
+  const link = (t.whatsappLink || "").trim();
+  if(!link){
+    alert("Sem link do WhatsApp desta turma. Configure primeiro.");
+    return;
+  }
+
+  const consec = faltasConsecutivas(a);
+  const msg = buildMensagem(currentTurma, a.nome, consec);
+
+  // arquiva antes
+  DB.historicoMensagens.unshift({
+    date: nowISO(),
+    turma: currentTurma,
+    aluno: a.nome,
+    faltasConsec: consec,
+    msg
+  });
+
+  a.avisos.push({ date: nowISO(), msg });
+  saveDB();
+
+  // abre WhatsApp com mensagem (funciona no celular e no PC)
+  const url = link + "?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+
+  setPill("Mensagem arquivada ✔", "ok");
+  renderAlunosTable();
+  renderTurmas();
+}
+
+function buildMensagem(turma, alunoNome, faltasConsec){
+  const f = faltasConsec >= 2 ? `${faltasConsec} faltas consecutivas` : "faltas registradas";
+  return `Olá, responsáveis. 👋
+
+Turma: ${turma}
+Aluno(a): ${alunoNome}
+
+Identificamos ${f}.
+
+Por gentileza, verifiquem o motivo e nos deem um retorno.
+
+Escola Estadual João Guidotti
+( Busca Ativa JG )`;
+}
+
+/* ============================
+   Modal
+============================ */
+function openModal(title, html){
+  $("modalTitle").textContent = title;
+  $("modalBody").innerHTML = html;
+  $("modal").classList.remove("hidden");
+  window.scrollTo({top: 0, behavior:"smooth"});
+}
+function closeModal(){
+  $("modal").classList.add("hidden");
+}
+
+/* ============================
+   Config turma
+============================ */
+function openConfigTurma(){
+  if(!currentTurma) return;
+  const t = DB.turmas[currentTurma];
+
+  openModal("⚙️ Configurar turma " + currentTurma, `
+    <div class="card" style="padding:12px">
+      <p class="muted">Cole abaixo o link do grupo do WhatsApp (formato chat.whatsapp.com)</p>
+      <input id="inputWhats" placeholder="https://chat.whatsapp.com/..." value="${escapeHTML(t.whatsappLink || "")}">
+      <div class="spacer"></div>
+      <button class="btn ok" onclick="saveConfigTurma()">Salvar</button>
+    </div>
+  `);
+}
+
+function saveConfigTurma(){
+  const v = document.getElementById("inputWhats").value.trim();
+  DB.turmas[currentTurma].whatsappLink = v;
+  saveDB();
+  closeModal();
+  renderTurmas();
+  setPill("Turma configurada ✔", "ok");
+}
+
+/* ============================
+   Alertas / Histórico
+============================ */
+function viewAlertas(){
+  const turma = $("filterTurma").value;
+  let alertas = [];
+
+  if(turma === "ALL"){
+    TURMAS_FIXAS.forEach(t=>{
+      getAlertasTurma(t).forEach(x=>{
+        alertas.push({ turma: t, ...x });
+      });
+    });
+  }else{
+    getAlertasTurma(turma).forEach(x=>{
+      alertas.push({ turma, ...x });
+    });
+  }
+
+  if(!alertas.length){
+    openModal("⚠️ Alertas", `<p class="muted">Nenhum aluno com 2+ faltas consecutivas no momento.</p>`);
+    return;
+  }
+
+  let html = `<div style="overflow:auto"><table class="table">
+    <tr>
+      <th>Turma</th><th>Aluno</th><th>Faltas consec.</th><th>Ação</th>
+    </tr>
+  `;
+
+  alertas.forEach(x=>{
+    html += `
+      <tr>
+        <td><b>${x.turma}</b></td>
+        <td>${escapeHTML(x.aluno.nome)}</td>
+        <td><span class="pill warn">⚠️ ${x.consec}</span></td>
+        <td>
+          <button class="btn small primary" onclick="openTurma('${x.turma}'); closeModal();">Abrir</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</table></div>`;
+  openModal("⚠️ Alertas (2+ faltas consecutivas)", html);
+}
+
+function viewHistorico(){
+  const h = DB.historicoMensagens || [];
+  if(!h.length){
+    openModal("📚 Histórico de mensagens", `<p class="muted">Nenhuma mensagem arquivada ainda.</p>`);
+    return;
+  }
+
+  let html = `<div class="row">
+    <button class="btn small danger" onclick="clearHistorico()">🗑️ Limpar histórico</button>
+  </div>
+  <div class="spacer"></div>
+  <div style="overflow:auto"><table class="table">
+    <tr>
+      <th>Data</th><th>Turma</th><th>Aluno</th><th>Faltas</th><th>Mensagem</th>
+    </tr>
+  `;
+
+  h.slice(0, 250).forEach(x=>{
+    html += `
+      <tr>
+        <td>${fmtDate(x.date)}</td>
+        <td><b>${x.turma}</b></td>
+        <td>${escapeHTML(x.aluno)}</td>
+        <td><span class="pill warn">⚠️ ${x.faltasConsec || 0}</span></td>
+        <td style="max-width:420px; white-space:pre-wrap">${escapeHTML(x.msg)}</td>
+      </tr>
+    `;
+  });
+
+  html += `</table></div>`;
+  openModal("📚 Histórico de mensagens", html);
+}
+
+function clearHistorico(){
+  if(!confirm("Limpar TODO o histórico de mensagens?")) return;
+  DB.historicoMensagens = [];
+  saveDB();
+  closeModal();
+  setPill("Histórico limpo ✔", "ok");
+}
+
+/* ============================
+   Busca rápida
+============================ */
+function applySearch(){
+  const q = $("searchName").value.trim().toLowerCase();
+  const turma = $("filterTurma").value;
+  const quick = $("quickFilter").value;
+
+  let items = [];
+
+  const turmas = turma === "ALL" ? TURMAS_FIXAS : [turma];
+
+  turmas.forEach(t=>{
+    DB.turmas[t].alunos.forEach(a=>{
+      items.push({ turma: t, aluno: a });
+    });
+  });
+
+  if(q){
+    items = items.filter(x => x.aluno.nome.toLowerCase().includes(q));
+  }
+
+  if(quick === "alerta"){
+    items = items.filter(x => faltasConsecutivas(x.aluno) >= 2);
+  }
+
+  if(quick === "avisado"){
+    items = items.filter(x => (x.aluno.avisos || []).length > 0);
+  }
+
+  if(quick === "pendente"){
+    items = items.filter(x => faltasConsecutivas(x.aluno) >= 2 && (x.aluno.avisos || []).length === 0);
+  }
+
+  if(!items.length){
+    setPill("Nenhum resultado", "bad");
+    return;
+  }
+
+  setPill(`${items.length} encontrado(s)`, "ok");
+
+  // mostra modal com resultados
+  let html = `<div style="overflow:auto"><table class="table">
+    <tr><th>Turma</th><th>Aluno</th><th>Consec.</th><th>Ação</th></tr>
+  `;
+
+  items.slice(0, 200).forEach(x=>{
+    const c = faltasConsecutivas(x.aluno);
+    html += `
+      <tr>
+        <td><b>${x.turma}</b></td>
+        <td>${escapeHTML(x.aluno.nome)}</td>
+        <td>${c>=2 ? `<span class="pill warn">⚠️ ${c}</span>` : `<span class="pill">0</span>`}</td>
+        <td><button class="btn small primary" onclick="openTurma('${x.turma}'); closeModal();">Abrir</button></td>
+      </tr>
+    `;
+  });
+
+  html += `</table></div>`;
+  openModal("🔎 Resultados da busca", html);
+}
+
+/* ============================
+   Backup/Restore
+============================ */
+function exportDB(){
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "busca-ativa-jg-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  setPill("Backup exportado ✔", "ok");
+}
+
+function importDB(){
+  const inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "application/json";
+  inp.onchange = async ()=>{
+    const file = inp.files[0];
+    if(!file) return;
+    const txt = await file.text();
+    try{
+      const obj = JSON.parse(txt);
+      if(!obj.turmas) throw new Error("inválido");
+      DB = obj;
+      saveDB();
+      closeModal();
+      closeTurma();
+      renderAll();
+      setPill("Backup importado ✔", "ok");
+    }catch(e){
+      alert("Arquivo inválido.");
+    }
+  };
+  inp.click();
+}
+
+/* ============================
+   Reset total
+============================ */
+function resetAll(){
+  if(!confirm("Zerar TUDO? Isso apaga turmas, alunos, registros e histórico.")) return;
+  DB = defaultDB();
+  saveDB();
+  closeModal();
+  closeTurma();
+  renderAll();
+  setPill("Tudo zerado ✔", "ok");
+}
+
+/* ============================
+   Nova chamada
+============================ */
+function novaChamada(){
+  openModal("📝 Nova chamada (manual)", `
+    <div class="card" style="padding:12px">
+      <p class="muted">
+        Para registrar chamada, abra uma turma e use os botões <b>C</b> e <b>F</b> em cada aluno.
+        <br><br>
+        (O modo foto/OCR será adicionado como atualização na próxima etapa.)
+      </p>
+    </div>
+  `);
+}
+
+/* ============================
+   Init
+============================ */
+function renderAll(){
+  // select turmas
+  $("filterTurma").innerHTML = `
+    <option value="ALL">Todas</option>
+    ${TURMAS_FIXAS.map(t=>`<option value="${t}">${t}</option>`).join("")}
+  `;
+
+  renderTurmas();
+}
+
+$("btnVoltar").onclick = closeTurma;
+$("btnAddAluno").onclick = addAluno;
+$("btnWhatsTurma").onclick = openWhatsTurma;
+$("btnConfigTurma").onclick = openConfigTurma;
+
+$("btnViewAlertas").onclick = viewAlertas;
+$("btnViewHistorico").onclick = viewHistorico;
+$("btnCloseModal").onclick = closeModal;
+
+$("btnBackup").onclick = exportDB;
+$("btnRestore").onclick = importDB;
+$("btnResetAll").onclick = resetAll;
+$("btnNovaChamada").onclick = novaChamada;
+
+$("searchName").addEventListener("input", ()=>{
+  if($("searchName").value.trim().length >= 3) applySearch();
+});
+$("filterTurma").addEventListener("change", ()=> setPill("Pronto"));
+$("quickFilter").addEventListener("change", ()=> setPill("Pronto"));
+
+$("btnAbrirChamada").onclick = ()=>{
+  alert("Chamada rápida: use os botões C e F na tabela de alunos.\n\n(O modo com lista completa e salvar por dia eu adiciono na próxima versão.)");
+};
+
+$("btnAlertasTurma").onclick = ()=>{
+  if(!currentTurma) return;
+  const list = getAlertasTurma(currentTurma);
+  if(!list.length){
+    openModal("⚠️ Alertas - " + currentTurma, `<p class="muted">Nenhum alerta nesta turma.</p>`);
+    return;
+  }
+  let html = `<div style="overflow:auto"><table class="table">
+    <tr><th>Aluno</th><th>Faltas</th><th>Ação</th></tr>
+  `;
+  list.forEach(x=>{
+    html += `
+      <tr>
+        <td>${escapeHTML(x.aluno.nome)}</td>
+        <td><span class="pill warn">⚠️ ${x.consec}</span></td>
+        <td><button class="btn small" onclick="openAvisar('${x.aluno.id}')">📩 Avisar</button></td>
+      </tr>
+    `;
+  });
+  html += `</table></div>`;
+  openModal("⚠️ Alertas - " + currentTurma, html);
+};
+
+renderAll();
+setPill("Carregado ✔", "ok");
+
+/* ============================
+   PWA Service Worker register
+============================ */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
+</script>
+</body>
+</html><!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -573,4 +1533,5 @@
       }
     </script>
   </body>
+
 </html>
