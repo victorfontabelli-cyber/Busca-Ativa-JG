@@ -1,563 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Busca Ativa - JG</title>
-
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0b2b4b" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busca Ativa JG</title>
+  <link rel="manifest" href="manifest.json">
   <style>
-    :root{
-      --bg:#0b1020;
-      --card:#121a2e;
-      --card2:#0f172a;
-      --txt:#e8eefc;
-      --muted:#9fb1d6;
-      --line:#243052;
-      --btn:#1f6feb;
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:linear-gradient(180deg,#070b16,#0b1020);
-      color:var(--txt);
-      padding:18px;
-    }
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-    h1{
-      font-size:18px;
-      margin:0;
-      letter-spacing:.2px;
-    }
-    .sub{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:4px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-      gap:14px;
-    }
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card2));
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
-    }
-    .card h2{
-      margin:0 0 6px 0;
-      font-size:16px;
-    }
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    button, .btn{
-      border:none;
-      border-radius:12px;
-      padding:10px 12px;
-      font-weight:700;
-      cursor:pointer;
-      background:var(--btn);
-      color:white;
-      transition:.15s;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    button:hover, .btn:hover{transform:translateY(-1px)}
-    .ghost{
-      background:transparent;
-      border:1px solid var(--line);
-      color:var(--txt);
-    }
-    .danger{
-      background:var(--danger);
-    }
-    .ok{
-      background:var(--ok);
-      color:#06220f;
-    }
-    .warn{
-      background:var(--warn);
-      color:#2a1b00;
-    }
-    .mini{
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:10px;
-    }
-    .hint{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:10px;
-      line-height:1.35;
-    }
-    .divider{
-      height:1px;
-      background:var(--line);
-      margin:12px 0;
-      opacity:.9;
-    }
-    textarea{
-      width:100%;
-      min-height:92px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#0a1022;
-      color:var(--txt);
-      padding:12px;
-      outline:none;
-      resize:vertical;
-      font-size:13px;
-      line-height:1.4;
-    }
-    input[type="text"]{
-      width:100%;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#0a1022;
-      color:var(--txt);
-      padding:10px 12px;
-      outline:none;
-      font-size:13px;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:12px;
-      margin-top:8px;
-    }
-    .log{
-      margin-top:10px;
-      padding:10px;
-      border-radius:14px;
-      border:1px dashed var(--line);
-      background:rgba(0,0,0,.12);
-      max-height:220px;
-      overflow:auto;
-      font-size:12px;
-      line-height:1.35;
-    }
-    .log strong{color:#fff}
-    .muted{color:var(--muted)}
-    footer{
-      margin-top:18px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-      opacity:.9;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+    h2 { margin-left: 20px; }
+    .turma-container { display: flex; flex-wrap: wrap; padding: 10px; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); margin: 10px; padding: 15px; width: 220px; display: flex; flex-direction: column; gap: 10px; }
+    .card button { padding: 8px; border: none; border-radius: 5px; cursor: pointer; background: #1976d2; color: #fff; }
+    .card button.delete { background: #d32f2f; }
+    .message { font-size: 14px; color: #333; }
   </style>
 </head>
-
 <body>
-  <header>
-    <div>
-      <h1>📌 Busca Ativa – Escola Estadual João Guidotti</h1>
-      <div class="sub">Registro de faltas + mensagem pronta + atalho direto para WhatsApp por turma.</div>
+  <h2>Ensino Fundamental</h2>
+  <div class="turma-container" id="fundamental">
+    <!-- Cards de turmas do Fundamental -->
+    <div class="card">
+      <h3>6ºA</h3>
+      <p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p>
+      <button class="photo">Tirar Foto da Lista</button>
+      <button class="upload">Upload da Lista</button>
+      <button class="whatsapp">Ir para WhatsApp</button>
+      <button class="delete">Excluir Card</button>
     </div>
-    <button class="ghost mini" onclick="resetAll()">🧹 Limpar tudo</button>
-  </header>
-
-  <div class="card" style="margin-bottom:14px;">
-    <h2>⚙️ Configuração rápida</h2>
-    <div class="hint">
-      1) Cadastre o link do grupo WhatsApp em cada turma (uma vez só).<br>
-      2) Faça upload de um TXT/CSV com os dados (ou tire foto para registrar).<br>
-      3) O app detecta automaticamente <b>2 ou mais F consecutivos</b> e gera a mensagem padrão.
-    </div>
-    <div class="divider"></div>
-    <div class="hint">
-      <b>Formato recomendado do arquivo (TXT ou CSV):</b><br>
-      Cada linha = um aluno.<br>
-      Exemplo:<br>
-      <span class="muted">MARIA EDUARDA; C C F F C</span><br>
-      <span class="muted">JOÃO PEDRO; C F F F C</span><br><br>
-      O app entende automaticamente <b>F</b> e <b>C</b>.
-    </div>
+    <div class="card"><h3>6ºB</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>6ºC</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>7ºA</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>7ºB</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>8ºA</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>8ºB</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>9ºA</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>9ºB</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
   </div>
 
-  <div id="grid" class="grid"></div>
+  <h2>Ensino Médio</h2>
+  <div class="turma-container" id="medio">
+    <div class="card"><h3>1ºA</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>1ºB</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>1ºC</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>2º Desenvolvimento</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>2º Logística</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>2ºC</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>3ºA Vendas</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>3ºB Logística</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>3ºC Desenvolvimento</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+    <div class="card"><h3>3ºD</h3><p class="message">É fã da escola João Guidotti, é importante a presença dele na escola, pois as faltas acarretam prejuízos pedagógicos bem como institucionais.</p><button class="photo">Tirar Foto da Lista</button><button class="upload">Upload da Lista</button><button class="whatsapp">Ir para WhatsApp</button><button class="delete">Excluir Card</button></div>
+  </div>
 
-  <footer>
-    Feito para uso escolar. Dados ficam somente no seu navegador (LocalStorage).
-  </footer>
-
-<script>
-/* ==============================
-   TURMAS FIXAS (cards)
-================================ */
-const TURMAS = [
-  "1ºA", "1ºB", "1ºC",
-  "2º Desenvolvimento", "2º Logística", "2ºC",
-  "3ºA Vendas", "3ºB Logística", "3ºC Desenvolvimento", "3ºD"
-];
-
-/* ==============================
-   STORAGE
-================================ */
-function keyWhats(turma){ return `whats_${turma}`; }
-function keyLog(turma){ return `log_${turma}`; }
-function keyFotos(turma){ return `fotos_${turma}`; }
-
-function getLog(turma){
-  return JSON.parse(localStorage.getItem(keyLog(turma)) || "[]");
-}
-function setLog(turma, arr){
-  localStorage.setItem(keyLog(turma), JSON.stringify(arr));
-}
-function addLog(turma, obj){
-  const arr = getLog(turma);
-  arr.unshift(obj);
-  setLog(turma, arr);
-}
-function getWhats(turma){
-  return localStorage.getItem(keyWhats(turma)) || "";
-}
-function setWhats(turma, val){
-  localStorage.setItem(keyWhats(turma), val);
-}
-function resetAll(){
-  if(!confirm("Tem certeza que deseja limpar tudo? (Whats + histórico)")) return;
-  TURMAS.forEach(t=>{
-    localStorage.removeItem(keyWhats(t));
-    localStorage.removeItem(keyLog(t));
-    localStorage.removeItem(keyFotos(t));
-  });
-  render();
-}
-
-/* ==============================
-   FUNÇÕES DE ANÁLISE
-================================ */
-
-// Detecta 2 ou mais F consecutivos dentro de uma sequência
-function temDuasFaltasConsecutivas(seq){
-  // seq = array de letras, ex: ["C","C","F","F","C"]
-  let count = 0;
-  for(const ch of seq){
-    if(ch === "F"){
-      count++;
-      if(count >= 2) return true;
-    }else{
-      count = 0;
-    }
-  }
-  return false;
-}
-
-// Converte uma linha em {nome, seq[]}
-function parseLinha(line){
-  // Aceita separadores ; , | ou tab
-  const parts = line.split(/;|,|\||\t/).map(s=>s.trim()).filter(Boolean);
-  if(parts.length < 2) return null;
-
-  const nome = parts[0];
-  const resto = parts.slice(1).join(" ");
-  // Extrai apenas C e F
-  const seq = (resto.toUpperCase().match(/[CF]/g) || []);
-  if(seq.length === 0) return null;
-
-  return { nome, seq };
-}
-
-// Lê o arquivo e retorna lista de alunos com faltas consecutivas
-function analisarTexto(text){
-  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-  const faltosos = [];
-
-  for(const line of lines){
-    const obj = parseLinha(line);
-    if(!obj) continue;
-
-    if(temDuasFaltasConsecutivas(obj.seq)){
-      faltosos.push(obj.nome);
-    }
-  }
-  return faltosos;
-}
-
-/* ==============================
-   MENSAGEM PADRÃO (MODELO B COMPLETO)
-================================ */
-function gerarMensagemCompleta(turma, nomes){
-  const data = new Date().toLocaleDateString("pt-BR");
-
-  let lista = nomes.map(n=>`- ${n}`).join("\n");
-
-  return `Boa tarde.
-
-A Escola Estadual João Guidotti informa que consta no registro de frequência 2 (duas) ou mais faltas consecutivas do(a) aluno(a) abaixo:
-
-${lista}
-
-Reforçamos que a presença do(a) estudante na escola é fundamental para o acompanhamento das aulas e do processo de aprendizagem, pois as faltas acarretam prejuízos pedagógicos, bem como institucionais.
-
-Solicitamos, por gentileza, que a família verifique a situação e, se necessário, apresente justificativa.
-
-Turma: ${turma}
-Data: ${data}
-
-Atenciosamente,
-Escola Estadual João Guidotti`;
-}
-
-/* ==============================
-   WHATSAPP
-================================ */
-function abrirWhats(turma){
-  const link = getWhats(turma);
-  if(!link){
-    alert("Cadastre primeiro o link do grupo WhatsApp dessa turma.");
-    return;
-  }
-  window.open(link, "_blank");
-}
-
-function enviarMensagemWhats(turma, msg){
-  const link = getWhats(turma);
-  if(!link){
-    alert("Cadastre primeiro o link do grupo WhatsApp dessa turma.");
-    return;
-  }
-
-  // Se o link for de convite do grupo, não dá pra abrir direto com texto.
-  // Então: abre o link do grupo e copia mensagem.
-  navigator.clipboard.writeText(msg).then(()=>{
-    window.open(link, "_blank");
-    alert("Mensagem copiada! Agora cole no grupo do WhatsApp.");
-  }).catch(()=>{
-    window.open(link, "_blank");
-    alert("Abra o WhatsApp e cole manualmente a mensagem.");
-  });
-}
-
-/* ==============================
-   FOTO (registro)
-================================ */
-function salvarFoto(turma, file){
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const fotos = JSON.parse(localStorage.getItem(keyFotos(turma)) || "[]");
-    fotos.unshift({
-      data: new Date().toISOString(),
-      img: reader.result
+  <script src="service-worker.js"></script>
+  <script>
+    document.querySelectorAll('.delete').forEach(btn => {
+      btn.addEventListener('click', e => e.target.closest('.card').remove());
     });
-    localStorage.setItem(keyFotos(turma), JSON.stringify(fotos));
-    alert("Foto registrada com sucesso!");
-  };
-  reader.readAsDataURL(file);
-}
-
-/* ==============================
-   UI
-================================ */
-function render(){
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-
-  TURMAS.forEach(turma=>{
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const whats = getWhats(turma);
-    const log = getLog(turma);
-
-    card.innerHTML = `
-      <h2>🏫 ${turma}</h2>
-
-      <div class="tag">📌 Card da turma com Foto + Upload + Whats + Histórico</div>
-
-      <div style="margin-top:10px;">
-        <label class="muted" style="font-size:12px;">Link do grupo WhatsApp:</label>
-        <input type="text" id="w_${turma}" placeholder="Cole aqui o link do grupo..." value="${escapeHtml(whats)}" />
-        <div class="row">
-          <button class="mini ok" onclick="salvarWhats('${turma}')">💾 Salvar Whats</button>
-          <button class="mini ghost" onclick="abrirWhats('${turma}')">💬 Abrir grupo</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div>
-        <label class="muted" style="font-size:12px;">📷 Foto da lista (registro):</label>
-        <input type="file" accept="image/*" capture="environment" id="foto_${turma}" />
-        <div class="hint">
-          A foto fica salva como <b>registro</b>. (OCR automático por foto exige etapa extra que vamos adicionar depois.)
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div>
-        <label class="muted" style="font-size:12px;">📄 Upload do arquivo (TXT/CSV):</label>
-        <input type="file" accept=".txt,.csv" id="file_${turma}" />
-        <div class="row">
-          <button class="mini" onclick="processarArquivo('${turma}')">⚡ Ler e detectar faltas</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div>
-        <label class="muted" style="font-size:12px;">🧾 Mensagem gerada:</label>
-        <textarea id="msg_${turma}" placeholder="Aqui vai aparecer a mensagem pronta..."></textarea>
-        <div class="row">
-          <button class="mini ok" onclick="salvarMensagem('${turma}')">📌 Arquivar</button>
-          <button class="mini" onclick="copiarMensagem('${turma}')">📋 Copiar</button>
-          <button class="mini ghost" onclick="enviarWhats('${turma}')">📲 Whats (colar)</button>
-          <button class="mini danger" onclick="limparHistorico('${turma}')">🗑️ Limpar histórico</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div>
-        <label class="muted" style="font-size:12px;">📚 Histórico de mensagens (arquivadas):</label>
-        <div class="log" id="log_${turma}">
-          ${renderLogHtml(log)}
-        </div>
-      </div>
-    `;
-
-    grid.appendChild(card);
-
-    // Eventos
-    const fotoInput = card.querySelector(`#foto_${cssId(turma)}`);
-    fotoInput.addEventListener("change", (e)=>{
-      const file = e.target.files?.[0];
-      if(file) salvarFoto(turma, file);
-    });
-  });
-}
-
-function salvarWhats(turma){
-  const input = document.getElementById(`w_${turma}`);
-  setWhats(turma, input.value.trim());
-  alert("WhatsApp salvo!");
-}
-
-function processarArquivo(turma){
-  const input = document.getElementById(`file_${turma}`);
-  const file = input.files?.[0];
-  if(!file){
-    alert("Selecione um arquivo TXT ou CSV primeiro.");
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const text = reader.result;
-    const faltosos = analisarTexto(text);
-
-    if(faltosos.length === 0){
-      document.getElementById(`msg_${turma}`).value =
-        "Nenhum aluno com 2 ou mais faltas consecutivas foi detectado nesse arquivo.";
-      return;
-    }
-
-    const msg = gerarMensagemCompleta(turma, faltosos);
-    document.getElementById(`msg_${turma}`).value = msg;
-  };
-  reader.readAsText(file, "utf-8");
-}
-
-function salvarMensagem(turma){
-  const msg = document.getElementById(`msg_${turma}`).value.trim();
-  if(!msg){
-    alert("Nenhuma mensagem para arquivar.");
-    return;
-  }
-  addLog(turma, { data: new Date().toISOString(), msg });
-  render();
-}
-
-function copiarMensagem(turma){
-  const msg = document.getElementById(`msg_${turma}`).value.trim();
-  if(!msg){
-    alert("Nenhuma mensagem para copiar.");
-    return;
-  }
-  navigator.clipboard.writeText(msg).then(()=>{
-    alert("Mensagem copiada!");
-  }).catch(()=>{
-    alert("Não consegui copiar automaticamente. Selecione e copie manualmente.");
-  });
-}
-
-function enviarWhats(turma){
-  const msg = document.getElementById(`msg_${turma}`).value.trim();
-  if(!msg){
-    alert("Nenhuma mensagem para enviar.");
-    return;
-  }
-  enviarMensagemWhats(turma, msg);
-}
-
-function limparHistorico(turma){
-  if(!confirm(`Deseja apagar TODO o histórico da turma ${turma}?`)) return;
-  localStorage.removeItem(keyLog(turma));
-  render();
-}
-
-/* ==============================
-   HELPERS
-================================ */
-function renderLogHtml(log){
-  if(!log || log.length === 0){
-    return `<span class="muted">Nenhuma mensagem arquivada ainda.</span>`;
-  }
-  return log.map(item=>{
-    const d = new Date(item.data).toLocaleString("pt-BR");
-    return `<div style="margin-bottom:10px;">
-      <strong>${d}</strong><br>
-      <span style="white-space:pre-wrap">${escapeHtml(item.msg)}</span>
-    </div>`;
-  }).join("<div class='divider'></div>");
-}
-
-function escapeHtml(str){
-  return (str || "").replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-  }[m]));
-}
-function cssId(turma){
-  return turma.replace(/\s+/g,"_").replace(/[^\w\-]/g,"_");
-}
-
-/* ==============================
-   SERVICE WORKER
-================================ */
-if("serviceWorker" in navigator){
-  window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
-  });
-}
-
-render();
-</script>
+  </script>
 </body>
 </html>
